@@ -17,3 +17,9 @@ class DayOfEating(models.Model):
 
     def __repr__(self):
         return f"{self.date}, {self.kcal} kcal, {self.protein} protein"
+
+    def add_calories(self, kcal):
+        self.kcal += int(kcal)
+
+    def add_protein(self, protein):
+        self.protein += int(protein)

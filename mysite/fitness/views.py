@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import DayOfEatingCreateForm
+from django.urls import reverse, reverse_lazy
 
 def index(request):
     context = {}
@@ -24,12 +25,34 @@ class DayOfEatingDetailView(LoginRequiredMixin, DetailView):
     model = DayOfEating
     template_name = 'day_of_eating_details.html'
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if 'action' in request.POST:
+            action = request.POST['action']
+            if action == 'Add calories':
+                number = request.POST.get('calories')
+                self.object.add_calories(int(number))
+            elif action == 'Add protein':
+                number = request.POST.get('protein')
+                self.object.add_protein(int(number))
+            self.object.save()
+
+        return self.get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('nutrition-details', kwargs={'pk': self.object.pk})
 
 class DayOfEatingCreateView(LoginRequiredMixin, CreateView):
     model = DayOfEating
-    success_url = "/fitness/nutrition"
+    success_url = reverse_lazy('nutrition')
     template_name = 'nutrition_add.html'
     form_class = DayOfEatingCreateForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         form.instance.athlete = self.request.user
@@ -38,8 +61,11 @@ class DayOfEatingCreateView(LoginRequiredMixin, CreateView):
 class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = DayOfEating
     fields = ['kcal', 'protein']
-    success_url = "/fitness/nutrition"
     template_name = 'nutrition_add.html'
+
+    def get_success_url(self):
+        pk = self.object.pk
+        return reverse_lazy('nutrition-details', args=[pk])
 
     def form_valid(self, form):
         form.instance.athlete = self.request.user
@@ -51,7 +77,7 @@ class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
 
 class DayOfEatingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = DayOfEating
-    success_url = "/fitness/nutrition"
+    success_url = reverse_lazy('nutrition')
     template_name = 'nutrition_delete.html'
 
     def test_func(self):
