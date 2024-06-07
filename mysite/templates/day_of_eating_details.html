@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Nutrition of the day</h1>
+    <hr>
+    <ul id="atitraukta">
+        <li><strong >Date: {{object.date}}</strong></li>
+        <li><strong>Calories:</strong> {{object.kcal}}</li>
+        <li><strong>Protein:</strong> {{object.protein}}</li>
+                <br/>
+        <div>
+          <a href="{% url 'nutrition-update' object.id %}" ><button>Update</button></a>
+          <a href="{% url 'nutrition-delete' object.id %}" ><button id="destroy">Delete</button></a>
+        </div>
+    </ul>
+{% endblock %}

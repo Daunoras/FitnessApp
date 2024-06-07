@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Nutrition</h1>
+
+    {% if dayofeating_list %}
+    <ul>
+        {% for day in dayofeating_list %}
+            <li id="days">
+            <a  href="{% url 'nutrition-details' day.pk %}">{{ day|stringformat:'r' }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You have not recorded your nutrition yet.</p>
+    {% endif %}
+
+{% endblock %}
