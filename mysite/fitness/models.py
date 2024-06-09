@@ -30,3 +30,33 @@ class Weighting(models.Model):
     date = models.DateField('Date', default=date.today)
     def __str__(self):
         return f"{self.date}:  {self.weight}kg"
+
+class Muscle(models.Model):
+    name = models.CharField('Name', max_length=30)
+    body_part = models.CharField('Body part', null=True, blank=True, max_length=30)
+
+class Equipment(models.Model):
+    name = models.CharField('Name', max_length=30)
+    type = models.CharField('Equipment type', null=True, blank=True, max_length=50)
+
+class WorkoutType(models.Model):
+    name = models.CharField('Name', max_length=20)
+    description = models.CharField('Workout type', null=True, blank=True, max_length=300)
+
+class Exercise(models.Model):
+    name = models.CharField('Name', max_length=50)
+    description = models.CharField('Workout type', null=True, blank=True, max_length=300)
+    muscle = models.ForeignKey(Muscle, on_delete=models.SET_NULL, null=True)
+    equipment = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True)
+
+class Workout(models.Model):
+    date = models.DateField('Date', default=date.today)
+    athlete = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
+    type = models.ForeignKey(WorkoutType, on_delete=models.SET_NULL, null=True, blank=True)
+
+class Set(models.Model):
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    weight = models.CharField('Weight', max_length=15)
+    reps = models.IntegerField('Reps')
