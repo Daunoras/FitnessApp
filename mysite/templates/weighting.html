@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Weighting</h1>
+
+     <a href="{% url 'weighting-add' %}"><button>ADD</button></a>
+
+    {% if weighting_list %}
+    <ul>
+        {% for day in weighting_list %}
+            <li id="days">
+            <a  href="{% url 'weighting-update' day.pk %}">{{ day }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You have not recorded your weight yet.</p>
+    {% endif %}
+
+{% endblock %}

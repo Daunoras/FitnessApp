@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <h1>Add your weight on the given day</h1>
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
+    </form>
+    {% if action == 'update' %}
+        <a href="{% url 'weighting-delete' object.id %}" ><button id="destroy">Delete</button></a>
+    {% endif %}
+    </div>
+{% endblock content %}
