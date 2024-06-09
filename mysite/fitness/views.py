@@ -6,8 +6,9 @@ from django.contrib.auth.forms import User
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import DayOfEatingCreateForm
+from .forms import DayOfEatingCreateForm, UserUpdateForm, ProfileUpdateForm
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     context = {}
@@ -108,3 +109,24 @@ def register(request):
             messages.error(request, 'The passwords do not match')
             return redirect('register')
     return render(request, 'register.html')
+
+@login_required
+def profile(request):
+    if request.method == "POST":
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f"Profile updated")
+            return redirect('profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form,
+    }
+
+    return render(request, 'profile.html', context)

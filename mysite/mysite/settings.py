@@ -10,9 +10,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'fitness',
+    # 'fitness',
     'crispy_forms',
     'crispy_bootstrap4',
+    'fitness.apps.FitnessConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

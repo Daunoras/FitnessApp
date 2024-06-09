@@ -9,5 +9,6 @@ urlpatterns = [
     path('nutrition/add', views.DayOfEatingCreateView.as_view(), name='nutrition-add'),
     path('nutrition/<int:pk>/update', views.DayOfEatingUpdateView.as_view(), name='nutrition-update'),
     path('nutrition/<int:pk>/delete', views.DayOfEatingDeleteView.as_view(), name='nutrition-delete'),
+    path('profile/', views.profile, name='profile'),
 
 ]

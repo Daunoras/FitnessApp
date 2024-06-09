@@ -1,9 +1,6 @@
 from django import forms
-from .models import DayOfEating
-
-
-# class DateInput(forms.DateInput):
-#     input_type = 'date'
+from .models import DayOfEating, Profile
+from django.contrib.auth.models import User
 
 class DayOfEatingCreateForm(forms.ModelForm):
     class Meta:
@@ -20,3 +17,15 @@ class DayOfEatingCreateForm(forms.ModelForm):
         if DayOfEating.objects.filter(athlete=self.user, date=date).exists():
             raise forms.ValidationError("You already have an entry for this date.")
         return date
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+class ProfileUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        fields = []
