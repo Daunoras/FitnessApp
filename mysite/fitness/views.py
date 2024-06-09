@@ -19,7 +19,7 @@ class DaysOfEatingListView(LoginRequiredMixin, ListView):
     template_name = 'days_of_eating.html'
 
     def get_queryset(self):
-        return DayOfEating.objects.filter(athlete=self.request.user)
+        return DayOfEating.objects.filter(athlete=self.request.user).order_by('-date')
 
 
 class DayOfEatingDetailView(LoginRequiredMixin, DetailView):
