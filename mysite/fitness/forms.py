@@ -1,5 +1,5 @@
 from django import forms
-from .models import DayOfEating, Profile, Weighting
+from .models import DayOfEating, Profile, Weighting, Workout
 from django.contrib.auth.models import User
 
 class DayOfEatingCreateForm(forms.ModelForm):
@@ -45,3 +45,9 @@ class WeightingCreateForm(forms.ModelForm):
         if Weighting.objects.filter(athlete=self.user, date=date).exists():
             raise forms.ValidationError("You already have an entry for this date.")
         return date
+
+class WorkoutCreateForm(forms.ModelForm):
+    class Meta:
+        model = Workout
+        fields = ['date', 'duration', 'type']
+        widgets = {'athlete': forms.HiddenInput()}

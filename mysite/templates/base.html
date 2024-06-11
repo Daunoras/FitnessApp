@@ -20,7 +20,7 @@
               <a class="nav-link" href="{% url 'profile' %}">{{ user.get_username }}</a>
           </li>
           <li class="nav-item active"><a class="nav-link" href="{% url 'nutrition' %}">Nutrition</a></li>
-          <li class="nav-item active"><a class="nav-link" href="{% url 'index' %}">Training</a></li>
+          <li class="nav-item active"><a class="nav-link" href="{% url 'workouts' %}">Training</a></li>
           <li class="nav-item active"><a class="nav-link" href="{% url 'weighting' %}">Weight</a></li>
           <li class="nav-item">
             <form method="post" action="{% url 'logout' %}">

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Workout</h1>
+    <hr>
+    <ul id="atitraukta">
+        <li><strong >Date: {{object.date}}</strong></li>
+        <li><strong>Duration:</strong> {{object.duration}}
+            <strong>Workout type:</strong> {{object.type}}
+
+        </li>
+
+    </ul>
+    <a href="{% url 'workouts' %}"><button>Go back</button></a>
+{% endblock %}

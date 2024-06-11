@@ -14,5 +14,8 @@ urlpatterns = [
     path('weighting/add', views.WeightingCreateView.as_view(), name= 'weighting-add'),
     path('weighting/<int:pk>/update', views.WeightingUpdateView.as_view(), name= 'weighting-update'),
     path('weighting/<int:pk>/delete', views.WeightingDeleteView.as_view(), name= 'weighting-delete'),
+    path('workouts/', views.WorkoutListView.as_view(), name='workouts'),
+    path('workouts/add', views.WorkoutCreateView.as_view(), name='workout-add'),
+    path('workouts/<int:pk>', views.WorkoutDetailView.as_view(), name='workout-details'),
 
 ]

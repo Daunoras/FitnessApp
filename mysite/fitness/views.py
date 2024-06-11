@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import DayOfEating, Weighting
+from .models import DayOfEating, Weighting, Workout
 from django.contrib.auth.forms import User
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import DayOfEatingCreateForm, UserUpdateForm, ProfileUpdateForm, WeightingCreateForm
+from .forms import DayOfEatingCreateForm, UserUpdateForm, ProfileUpdateForm, WeightingCreateForm, WorkoutCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 
@@ -179,3 +179,23 @@ class WeightingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         day = self.get_object()
         return self.request.user == day.athlete
+
+class WorkoutListView(LoginRequiredMixin, ListView):
+    model = Workout
+    template_name = 'workouts.html'
+    def get_queryset(self):
+        return Workout.objects.filter(athlete=self.request.user).order_by('-date')
+
+class WorkoutDetailView(LoginRequiredMixin, DetailView):
+    model = Workout
+    template_name = 'workout_details.html'
+
+class WorkoutCreateView(LoginRequiredMixin, CreateView):
+    model = Workout
+    success_url = reverse_lazy('workouts')
+    template_name = 'workout_add.html'
+    form_class = WorkoutCreateForm
+
+    def form_valid(self, form):
+        form.instance.athlete = self.request.user
+        return super().form_valid(form)

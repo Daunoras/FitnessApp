@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Workouts</h1>
+
+     <a href="{% url 'workout-add' %}"><button>ADD</button></a>
+
+    {% if workout_list %}
+    <ul>
+        {% for workout in workout_list %}
+            <li id="days">
+            <a  href="{% url 'workout-details' workout.pk %}">{{ workout|stringformat:'s' }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You have not recorded your training yet.</p>
+    {% endif %}
+
+{% endblock %}
