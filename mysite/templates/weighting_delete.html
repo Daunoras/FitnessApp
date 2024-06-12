@@ -10,8 +10,9 @@
         </fieldset>
         <div class="form-group">
             <button id="destroy" type="submit">Confirm</button>
-            <a  href="{% url 'nutrition-details' object.id %}"><button>Cancel</button></a>
+
         </div>
     </form>
+         <a  href="{% url 'weighting' %}"><button>Cancel</button></a>
     </div>
 {% endblock content %}

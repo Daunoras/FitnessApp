@@ -10,8 +10,9 @@
         </fieldset>
         <div class="form-group">
             <button id="destroy" type="submit">Confirm</button>
-            <a class="btn btn-outline-secondary" href="{% url 'workout-details' object.id %}">Cancel</a>
+
         </div>
     </form>
+        <a href="{% url 'workout-details' object.id %}"><button>Cancel</button></a>
     </div>
 {% endblock content %}
