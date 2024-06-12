@@ -10,6 +10,10 @@
 
         </li>
 
+        <div>
+          <a href="{% url 'workout-update' object.id %}" ><button>Update</button></a>
+          <a href="{% url 'workout-delete' object.id %}" ><button id="destroy">Delete</button></a>
+        </div>
     </ul>
     <a href="{% url 'workouts' %}"><button>Go back</button></a>
 {% endblock %}

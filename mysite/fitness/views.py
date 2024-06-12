@@ -199,3 +199,29 @@ class WorkoutCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.athlete = self.request.user
         return super().form_valid(form)
+
+class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Workout
+    fields = ['date', 'duration', 'type']
+    template_name = 'workout_add.html'
+
+    def get_success_url(self):
+        pk = self.object.pk
+        return reverse_lazy('workout-details', args=[pk])
+
+    def form_valid(self, form):
+        form.instance.athlete = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        workout = self.get_object()
+        return self.request.user == workout.athlete
+
+class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Workout
+    success_url = reverse_lazy('workouts')
+    template_name = 'workout_delete.html'
+
+    def test_func(self):
+        workout = self.get_object()
+        return self.request.user == workout.athlete

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div id="atitraukta" class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <h1>Delete</h1>
+            <h2>Do you really want to delete {{ object.date }} {{ object.type }}?</h2>
+        </fieldset>
+        <div class="form-group">
+            <button id="destroy" type="submit">Confirm</button>
+            <a class="btn btn-outline-secondary" href="{% url 'workout-details' object.id %}">Cancel</a>
+        </div>
+    </form>
+    </div>
+{% endblock content %}
