@@ -17,7 +17,7 @@
     </ul>
 
     <ul>
-    {% for set in sets %}
+    {% for set in workout.set_set.all %}
         <li>{{ set }}</li>
     {% endfor %}
     </ul>
@@ -25,7 +25,6 @@
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
-            <h1>Add performed sets</h1>
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">

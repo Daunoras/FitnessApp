@@ -74,5 +74,9 @@ class Set(models.Model):
     weight = models.CharField('Weight', max_length=15)
     reps = models.IntegerField('Reps')
     def __str__(self):
-        return f"{self.exercise}: {self.weight} kg x {self.reps}"
+        if self.weight == "0":
+            line = f"{self.exercise}: bodyweight x {self.reps}"
+        else:
+            line = f"{self.exercise}: {self.weight} kg x {self.reps}"
+        return line
 
