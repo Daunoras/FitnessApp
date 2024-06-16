@@ -1,5 +1,5 @@
 from django import forms
-from .models import DayOfEating, Profile, Weighting, Workout
+from .models import DayOfEating, Profile, Weighting, Workout, Set, Exercise
 from django.contrib.auth.models import User
 
 class DayOfEatingCreateForm(forms.ModelForm):
@@ -51,3 +51,11 @@ class WorkoutCreateForm(forms.ModelForm):
         model = Workout
         fields = ['date', 'duration', 'type']
         widgets = {'athlete': forms.HiddenInput()}
+
+class SetCreateForm(forms.ModelForm):
+    class Meta:
+        model = Set
+        fields = ['exercise', 'weight', 'reps']
+        widgets = {
+            'workout': forms.HiddenInput()
+        }

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
     <h1>Workout</h1>
     <hr>
@@ -15,5 +15,23 @@
           <a href="{% url 'workout-delete' object.id %}" ><button id="destroy">Delete</button></a>
         </div>
     </ul>
+
+    <ul>
+    {% for set in sets %}
+        <li>{{ set }}</li>
+    {% endfor %}
+    </ul>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <h1>Add performed sets</h1>
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button type="submit">Add</button>
+        </div>
+    </form>
+
     <a href="{% url 'workouts' %}"><button>Go back</button></a>
 {% endblock %}

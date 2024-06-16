@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import DayOfEating, Weighting, Workout
+from .models import DayOfEating, Weighting, Workout, Set
 from django.contrib.auth.forms import User
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import DayOfEatingCreateForm, UserUpdateForm, ProfileUpdateForm, WeightingCreateForm, WorkoutCreateForm
+from .forms import DayOfEatingCreateForm, UserUpdateForm, ProfileUpdateForm, WeightingCreateForm, WorkoutCreateForm, SetCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import FormMixin
 
 def index(request):
     context = {}
@@ -186,9 +187,34 @@ class WorkoutListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Workout.objects.filter(athlete=self.request.user).order_by('-date')
 
-class WorkoutDetailView(LoginRequiredMixin, DetailView):
+class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
     model = Workout
     template_name = 'workout_details.html'
+    form_class = SetCreateForm
+    # context_object_name = 'workout'
+
+    def get_success_url(self):
+        return reverse_lazy('workout-details', kwargs={'pk': self.kwargs['pk']})
+
+    def get_context_data(self, **kwargs):
+         context = super(WorkoutDetailView, self).get_context_data(**kwargs)
+         context['form'] = SetCreateForm(initial={'workout': self.object})
+
+         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.workout_id = self.kwargs['pk']
+        form.save()
+        return super().form_valid(form)
+
 
 class WorkoutCreateView(LoginRequiredMixin, CreateView):
     model = Workout
