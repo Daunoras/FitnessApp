@@ -251,3 +251,16 @@ class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         workout = self.get_object()
         return self.request.user == workout.athlete
+
+class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Set
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        workout_id = self.object.workout.id
+        self.object.delete()
+        return redirect(reverse('workout-details', kwargs={'pk': workout_id}))
+
+    def test_func(self):
+        workout = self.get_object().workout
+        return self.request.user == workout.athlete

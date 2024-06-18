@@ -18,7 +18,13 @@
 
     <ul>
     {% for set in workout.set_set.all %}
-        <li>{{ set }}</li>
+        <li>
+            {{ set }}
+                <form method="post" action="{% url 'set-delete' set.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">-</button>
+                </form>
+        </li>
     {% endfor %}
     </ul>
 
@@ -28,7 +34,7 @@
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">
-            <button type="submit">Add</button>
+            <button type="submit">Add set</button>
         </div>
     </form>
 
