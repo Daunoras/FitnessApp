@@ -79,4 +79,3 @@ class Set(models.Model):
         else:
             line = f"{self.exercise}: {self.weight} kg x {self.reps}"
         return line
-

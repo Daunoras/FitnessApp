@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import DayOfEating, Weighting, Workout, Set
 from django.contrib.auth.forms import User
@@ -264,3 +264,24 @@ class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         workout = self.get_object().workout
         return self.request.user == workout.athlete
+
+def chart_view(request):
+    return render(request, 'chart.html')
+
+def get_char_data(request):
+    model_name = request.GET.get('model')
+    if model_name == 'nutrition':
+        data_queryset = DayOfEating.objects.all()
+        labels = [entry.date for entry in data_queryset]
+        data = [entry.kcal for entry in data_queryset]
+    elif model_name == 'weight':
+        data_queryset = Weighting.objects.all()
+        labels = [entry.date for entry in data_queryset]
+        data = [entry.weight for entry in data_queryset]
+    else:
+        return JsonResponse({'error': 'Invalid model'}, status=400)
+
+    return JsonResponse({
+        'labels': labels,
+        'data': data,
+    })
