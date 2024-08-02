@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <h1>Select Data to Display</h1>
     <select id="dataSelector">
         <option value="nutrition">Nutrition Data</option>
         <option value="weight">Weight Data</option>
-
     </select>
+    <br>
 
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <canvas id="myChart" width="800" height="400"></canvas>
 
-    <script src="{% static 'js/chart.js' %}"></script>
+    <script src="{% static 'js/chart_data.js' %}"></script>
+    <script src="{% static 'js/canvas_chart.js' %}"></script>
+
 {% endblock %}
