@@ -6,7 +6,8 @@ class Chart {
         } else {
             console.error('error with canvas')
         }
-        this.data = data;
+        this.data = data.data;
+        this.labels = data.labels
     }
 
     drawLineChart() {
@@ -25,7 +26,8 @@ class Chart {
     }
 
     updateData(newData) {
-        this.data = newData;
+        this.data = newData.data;
+        this.labels = newData.labels;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawLineChart();
     }
