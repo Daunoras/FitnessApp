@@ -1,3 +1,5 @@
+import Chart from './canvas_chart.js';
+
 function fetchDataAndRenderChart(model) {
     const url = `/fitness/api/chart/data/?model=${model}`;
     fetch(url)

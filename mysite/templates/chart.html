@@ -9,9 +9,10 @@
     </select>
     <br>
 
-    <canvas id="myChart" width="800" height="400"></canvas>
+    <div id="canvas-container" style="padding: 20px;">
+        <canvas id="myChart" ></canvas>
+    </div>
 
-    <script src="{% static 'js/chart_data.js' %}"></script>
-    <script src="{% static 'js/canvas_chart.js' %}"></script>
+    <script type="module" src="{% static 'js/chart_data.js' %}"></script>
 
 {% endblock %}
