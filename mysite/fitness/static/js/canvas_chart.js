@@ -8,21 +8,24 @@ class Chart {
         }
         this.data = data.data;
         this.labels = data.labels;
-        window.addEventListener('resize', () => this.resize());
+        this.normalizedDates = []
+        window.addEventListener('resize', () => this.resizeChart());
     }
 
-    drawLineChart() {
-        if (!this.ctx) return;
-//          date transformation
+    dateTransformation() {
         let timestamps = this.labels.map(label => new Date(label).getTime());
         let minDate = Math.min(...timestamps);
         let offsetedDates = timestamps.map(date => date - minDate);
         let dateEndPoint = Math.max(...offsetedDates);
-        let normalizedDates = offsetedDates.map(date => date / dateEndPoint);
+        this.normalizedDates = offsetedDates.map(date => date / dateEndPoint);
+    }
+
+    drawLineChart() {
+        if (!this.ctx) return;
 //          coordinate generation
-        let coordinates = [];
+        let coordinates = []
         this.data.forEach((value, index) => {
-            let x = this.canvas.width * normalizedDates[index]
+            let x = this.canvas.width * this.normalizedDates[index]
             let y = this.canvas.height - (value / Math.max(...this.data)) * this.canvas.height;
             coordinates.push([x, y]);
         });
@@ -40,15 +43,27 @@ class Chart {
     updateData(newData) {
         this.data = newData.data;
         this.labels = newData.labels;
+        this.dateTransformation()
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawLineChart();
     }
 
-    resize() {
+    resizeCanvas() {
         const container = this.canvas.parentElement;
         this.canvas.width = container.clientWidth;
-        this.canvas.height = container.clientHeight;
+        this.canvas.height = this.canvas.width * 0.6;
+    }
+
+    resizeChart() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.resizeCanvas();
+        this.drawLineChart();
+    }
+
+    initialDraw() {
+        this.resizeCanvas();
+        this.dateTransformation();
+        this.drawLineChart();
     }
 
 }

@@ -9,7 +9,7 @@ function fetchDataAndRenderChart(model) {
                 myChart.updateData(data)
             } else {
                 myChart = new Chart('myChart', data);
-                myChart.drawLineChart();
+                myChart.initialDraw();
             }
         })
         .catch(error => console.error('Error fetching data:', error));
