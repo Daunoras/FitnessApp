@@ -8,8 +8,9 @@ class Chart {
         }
         this.data = data.data;
         this.labels = data.labels;
-        this.model = model
+        this.model = model;
         this.normalizedDates = [];
+        this.coordinates = [];
         window.addEventListener('resize', () => this.resizeChart());
     }
 
@@ -21,21 +22,22 @@ class Chart {
         this.normalizedDates = offsetedDates.map(date => date / dateEndPoint);
     }
 
-    drawLineChart() {
-        if (!this.ctx) return;
-//          coordinate generation
-        let coordinates = [];
+    coordinateGeneration() {
         let maxValue = Math.max(...this.data);
+        this.coordinates.length = 0;
         this.data.forEach((value, index) => {
             let x = (this.canvas.width - 100) * this.normalizedDates[index] + 80
             let y = (this.canvas.height - 50) - (value / maxValue) * (this.canvas.height - 90);
-            coordinates.push([x, y]);
+            this.coordinates.push([x, y]);
         });
-        coordinates.sort((a, b) => a[0] - b[0]);
-//          drawing the line
+        this.coordinates.sort((a, b) => a[0] - b[0]);
+    }
+
+    drawLineChart() {
+        if (!this.ctx) return;
         this.ctx.beginPath();
-        this.ctx.moveTo(coordinates[0][0], coordinates[0][1]);
-        coordinates.forEach(coordinate => {
+        this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
+        this.coordinates.forEach(coordinate => {
             this.ctx.lineTo(coordinate[0], coordinate[1]);
         });
         this.ctx.strokeStyle = 'red';
@@ -56,6 +58,11 @@ class Chart {
         });
         this.ctx.strokeStyle = 'gray';
         this.ctx.stroke();
+        this.ctx.font = '22px Arial';
+        this.ctx.fillStyle = 'black';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(this.model, this.canvas.width / 2, 20);
+
     }
 
     updateData(newData, model) {
@@ -63,6 +70,7 @@ class Chart {
         this.labels = newData.labels;
         this.model = model;
         this.dateTransformation();
+        this.coordinateGeneration();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawAxis();
         this.drawLineChart();
@@ -77,6 +85,7 @@ class Chart {
     resizeChart() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.resizeCanvas();
+        this.coordinateGeneration();
         this.drawAxis();
         this.drawLineChart();
     }
@@ -84,6 +93,7 @@ class Chart {
     initialDraw() {
         this.resizeCanvas();
         this.dateTransformation();
+        this.coordinateGeneration();
         this.drawAxis();
         this.drawLineChart();
     }
