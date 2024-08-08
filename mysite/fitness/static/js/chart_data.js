@@ -6,9 +6,9 @@ function fetchDataAndRenderChart(model) {
         .then(response => response.json())
         .then(data => {
             if (myChart) {
-                myChart.updateData(data)
+                myChart.updateData(data, model)
             } else {
-                myChart = new Chart('myChart', data);
+                myChart = new Chart('myChart', data, model);
                 myChart.initialDraw();
             }
         })

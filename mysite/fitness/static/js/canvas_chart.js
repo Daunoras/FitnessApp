@@ -1,5 +1,5 @@
 class Chart {
-    constructor(canvasId, data) {
+    constructor(canvasId, data, model) {
         this.canvas = document.getElementById(canvasId);
         if (this.canvas.getContext) {
             this.ctx = this.canvas.getContext('2d');
@@ -8,7 +8,8 @@ class Chart {
         }
         this.data = data.data;
         this.labels = data.labels;
-        this.normalizedDates = []
+        this.model = model
+        this.normalizedDates = [];
         window.addEventListener('resize', () => this.resizeChart());
     }
 
@@ -23,10 +24,11 @@ class Chart {
     drawLineChart() {
         if (!this.ctx) return;
 //          coordinate generation
-        let coordinates = []
+        let coordinates = [];
+        let maxValue = Math.max(...this.data);
         this.data.forEach((value, index) => {
-            let x = this.canvas.width * this.normalizedDates[index]
-            let y = this.canvas.height - (value / Math.max(...this.data)) * this.canvas.height;
+            let x = (this.canvas.width - 100) * this.normalizedDates[index] + 80
+            let y = (this.canvas.height - 50) - (value / maxValue) * (this.canvas.height - 90);
             coordinates.push([x, y]);
         });
         coordinates.sort((a, b) => a[0] - b[0]);
@@ -40,11 +42,29 @@ class Chart {
         this.ctx.stroke();
     }
 
-    updateData(newData) {
+    drawAxis() {
+        let axisCoordinates = [];
+        axisCoordinates.push(
+            [70, 40],
+            [70, this.canvas.height - 50],
+            [this.canvas.width - 20, this.canvas.height - 50]
+        );
+        this.ctx.beginPath();
+        this.ctx.moveTo(axisCoordinates[0][0], axisCoordinates[0][1]);
+        axisCoordinates.forEach(coordinate => {
+            this.ctx.lineTo(coordinate[0], coordinate[1]);
+        });
+        this.ctx.strokeStyle = 'gray';
+        this.ctx.stroke();
+    }
+
+    updateData(newData, model) {
         this.data = newData.data;
         this.labels = newData.labels;
-        this.dateTransformation()
+        this.model = model;
+        this.dateTransformation();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawAxis();
         this.drawLineChart();
     }
 
@@ -57,12 +77,14 @@ class Chart {
     resizeChart() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.resizeCanvas();
+        this.drawAxis();
         this.drawLineChart();
     }
 
     initialDraw() {
         this.resizeCanvas();
         this.dateTransformation();
+        this.drawAxis();
         this.drawLineChart();
     }
 
