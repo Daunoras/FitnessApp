@@ -269,17 +269,20 @@ def chart_view(request):
     return render(request, 'chart.html')
 
 def get_char_data(request):
-    model_name = request.GET.get('model')
-    if model_name == 'nutrition':
-        data_queryset = DayOfEating.objects.all()
-        labels = [entry.date for entry in data_queryset]
-        data = [entry.kcal for entry in data_queryset]
-    elif model_name == 'weight':
-        data_queryset = Weighting.objects.all()
-        labels = [entry.date for entry in data_queryset]
-        data = [entry.weight for entry in data_queryset]
+    if request.user.is_authenticated:
+        model_name = request.GET.get('model')
+        if model_name == 'nutrition':
+            data_queryset = DayOfEating.objects.filter(athlete=request.user)
+            labels = [entry.date for entry in data_queryset]
+            data = [entry.kcal for entry in data_queryset]
+        elif model_name == 'weight':
+            data_queryset = Weighting.objects.filter(athlete=request.user)
+            labels = [entry.date for entry in data_queryset]
+            data = [entry.weight for entry in data_queryset]
+        else:
+            return JsonResponse({'error': 'Invalid model'}, status=400)
     else:
-        return JsonResponse({'error': 'Invalid model'}, status=400)
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
 
     return JsonResponse({
         'labels': labels,
