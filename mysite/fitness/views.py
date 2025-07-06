@@ -283,6 +283,7 @@ class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == workout.athlete
 
 
+@login_required
 def duplicate_set(request, pk):
     original_set = get_object_or_404(Set, id=pk)
     new_set = Set.objects.create(
