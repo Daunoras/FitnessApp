@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import DayOfEating, Weighting, Workout, Set
+from .models import DayOfEating, Weighting, Workout, Set, Exercise
 from django.contrib.auth.forms import User
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
@@ -197,10 +197,20 @@ class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
         return reverse_lazy('workout-details', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
-         context = super(WorkoutDetailView, self).get_context_data(**kwargs)
-         context['form'] = SetCreateForm(initial={'workout': self.object})
+        context = super(WorkoutDetailView, self).get_context_data(**kwargs)
+        previous_data = self.request.session.get('last_set_data', {})
 
-         return context
+        if 'exercise_id' in previous_data:
+            try:
+                previous_data['exercise'] = Exercise.objects.get(id=previous_data['exercise_id'])
+            except Exercise.DoesNotExist:
+                previous_data['exercise'] = None
+            del previous_data['exercise_id']
+
+        previous_data['workout'] = self.object
+        context['form'] = SetCreateForm(initial=previous_data)
+
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -213,6 +223,13 @@ class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
     def form_valid(self, form):
         form.instance.workout_id = self.kwargs['pk']
         form.save()
+
+        self.request.session['last_set_data'] = {
+            'exercise_id': form.cleaned_data['exercise'].id,
+            'weight': form.cleaned_data['weight'],
+            'reps': form.cleaned_data['reps']
+        }
+
         return super().form_valid(form)
 
 
