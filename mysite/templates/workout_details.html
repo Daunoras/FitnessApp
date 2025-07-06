@@ -24,6 +24,10 @@
                     {% csrf_token %}
                     <button type="submit">-</button>
                 </form>
+                <form action="{% url 'set-duplicate' set.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">copy</button>
+                </form>
         </li>
     {% endfor %}
     </ul>

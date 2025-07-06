@@ -20,6 +20,7 @@ urlpatterns = [
     path('workouts/<int:pk>/update', views.WorkoutUpdateView.as_view(), name='workout-update'),
     path('workouts/<int:pk>/delete', views.WorkoutDeleteView.as_view(), name='workout-delete'),
     path('set/<int:pk>/delete/', views.SetDeleteView.as_view(), name='set-delete'),
+    path('set/<int:pk>/duplicate/', views.duplicate_set, name='set-duplicate'),
     path('chart/', views.chart_view, name='chart-view'),
     path('api/chart/data/', views.get_char_data, name='chart-data'),
 ]

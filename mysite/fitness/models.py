@@ -22,7 +22,7 @@ class DayOfEating(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     def __str__(self):
-        return f"{self.user.username}"
+        return self.user.username
 
 class Weighting(models.Model):
     athlete = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -35,19 +35,19 @@ class Muscle(models.Model):
     name = models.CharField('Name', max_length=30)
     body_part = models.CharField('Body part', null=True, blank=True, max_length=30)
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 class Equipment(models.Model):
     name = models.CharField('Name', max_length=30)
     type = models.CharField('Equipment type', null=True, blank=True, max_length=50)
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 class WorkoutType(models.Model):
     name = models.CharField('Name', max_length=20)
     description = models.CharField('Workout type', null=True, blank=True, max_length=300)
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 
 class Exercise(models.Model):
@@ -56,7 +56,7 @@ class Exercise(models.Model):
     target_muscle = models.ForeignKey(Muscle, on_delete=models.SET_NULL, null=True)
     equipment = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True)
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 
 class Workout(models.Model):
@@ -75,7 +75,6 @@ class Set(models.Model):
     reps = models.IntegerField('Reps')
     def __str__(self):
         if self.weight == "0":
-            line = f"{self.exercise}: bodyweight x {self.reps}"
+            return f"{self.exercise}: bodyweight x {self.reps}"
         else:
-            line = f"{self.exercise}: {self.weight} kg x {self.reps}"
-        return line
+            return f"{self.exercise}: {self.weight} kg x {self.reps}"

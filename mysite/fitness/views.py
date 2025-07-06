@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import DayOfEating, Weighting, Workout, Set, Exercise
@@ -281,6 +281,18 @@ class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         workout = self.get_object().workout
         return self.request.user == workout.athlete
+
+
+def duplicate_set(request, pk):
+    original_set = get_object_or_404(Set, id=pk)
+    new_set = Set.objects.create(
+        exercise=original_set.exercise,
+        workout=original_set.workout,
+        weight=original_set.weight,
+        reps=original_set.reps,
+    )
+    return redirect('workout-details', pk=original_set.workout.pk)
+
 
 def chart_view(request):
     return render(request, 'chart.html')
