@@ -6,11 +6,10 @@ TECH STACK: Python, Django, JavaScript
 
 
 TO DO:
-* Improve ux for adding sets in Training:
-  * add a button for set duplication;
+
 * Display training sessions in a calendar layout;
-* Adding a training session automaticaly opens the session allowing to add exercises;
+* Adding a training session automatically opens the session allowing to add exercises;
 * Statistics chart:
-  * axises;
+  * axis & labels;
   * filtering by date;
   * exercise statistics;
