@@ -235,9 +235,11 @@ class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
 
 class WorkoutCreateView(LoginRequiredMixin, CreateView):
     model = Workout
-    success_url = reverse_lazy('workouts')
     template_name = 'workout_add.html'
     form_class = WorkoutCreateForm
+
+    def get_success_url(self):
+        return reverse_lazy('workout-details', args=[self.object.pk])
 
     def form_valid(self, form):
         form.instance.athlete = self.request.user
