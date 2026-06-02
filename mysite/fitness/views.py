@@ -300,19 +300,32 @@ def duplicate_set(request, pk):
 def chart_view(request):
     return render(request, 'chart.html')
 
-def get_char_data(request):
+def get_chart_data(request):
     if request.user.is_authenticated:
+
         model_name = request.GET.get('model')
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+
         if model_name == 'nutrition':
             data_queryset = DayOfEating.objects.filter(athlete=request.user)
+            if date_from:
+                data_queryset = data_queryset.filter(date__gte=date_from)
+            if date_to:
+                data_queryset = data_queryset.filter(date__lte=date_to)
             labels = [entry.date for entry in data_queryset]
             data = [entry.kcal for entry in data_queryset]
         elif model_name == 'weight':
             data_queryset = Weighting.objects.filter(athlete=request.user)
+            if date_from:
+                data_queryset = data_queryset.filter(date__gte=date_from)
+            if date_to:
+                data_queryset = data_queryset.filter(date__lte=date_to)
             labels = [entry.date for entry in data_queryset]
             data = [entry.weight for entry in data_queryset]
         else:
             return JsonResponse({'error': 'Invalid model'}, status=400)
+
     else:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 

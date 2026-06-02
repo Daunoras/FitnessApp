@@ -1,7 +1,8 @@
 import Chart from './canvas_chart.js';
 
-function fetchDataAndRenderChart(model) {
-    const url = `/fitness/api/chart/data/?model=${model}`;
+function fetchDataAndRenderChart(model, startDate, endDate) {
+
+    const url = `/fitness/api/chart/data/?model=${model}&date_from=${startDate}&date_to=${endDate}`;
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -17,10 +18,20 @@ function fetchDataAndRenderChart(model) {
 
 let myChart = null;
 document.addEventListener('DOMContentLoaded', function() {
-    const selector = document.getElementById('dataSelector');
-    fetchDataAndRenderChart(selector.value);
+    const modelSelector = document.getElementById('dataSelector');
+    const dateFrom = document.getElementById('date_from');
+    const dateTo = document.getElementById('date_to');
+    fetchDataAndRenderChart(modelSelector.value, dateFrom.value, dateTo.value);
 
-    selector.addEventListener('change', function() {
-        fetchDataAndRenderChart(this.value);
+    modelSelector.addEventListener('change', function() {
+         fetchDataAndRenderChart(this.value, dateFrom.value, dateTo.value);
+    });
+
+    dateFrom.addEventListener('change', function() {
+        fetchDataAndRenderChart(modelSelector.value, this.value, dateTo.value)
+    });
+
+    dateTo.addEventListener('change', function() {
+        fetchDataAndRenderChart(modelSelector.value, dateFrom.value, this.value)
     });
 });
