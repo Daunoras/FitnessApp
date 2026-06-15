@@ -45,7 +45,6 @@ class Chart {
             this.points[i]['y'] = y;
             this.coordinates.push([x, y]);
         }
-        console.log(this.points);
         this.coordinates.sort((a, b) => a[0] - b[0]);
     }
 

@@ -54,10 +54,22 @@ function showTooltip(point, pageX, pageY) {
         `Date: ${point.date}<br>
          Value: ${point.value}`;
 
-    tooltip.style.left = pageX + 10 + "px";
-    tooltip.style.top = pageY + 10 + "px";
-
     tooltip.style.display = "block";
+
+    const offset = 10;
+
+    let left = pageX + offset;
+    let top = pageY + offset;
+
+    if (left + tooltip.offsetWidth > window.innerWidth) {
+        left = pageX - tooltip.offsetWidth - offset;
+    }
+    if (top + tooltip.offsetHeight > window.innerHeight) {
+        top = pageY - tooltip.offsetHeight - offset;
+    }
+
+    tooltip.style.left = left + "px";
+    tooltip.style.top = top + "px";
 }
 
 function hideTooltip() {
