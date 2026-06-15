@@ -11,7 +11,20 @@ class Chart {
         this.model = model;
         this.normalizedDates = [];
         this.coordinates = [];
+        this.points = [];
         window.addEventListener('resize', () => this.resizeChart());
+    }
+
+    setPoints() {
+        for (let i = 0; i < this.data.length; i++) {
+            let point = {
+                x: undefined,
+                y: undefined,
+                date: this.labels[i],
+                value: this.data[i]
+            }
+            this.points.push(point);
+        }
     }
 
     dateTransformation() {
@@ -28,8 +41,11 @@ class Chart {
         for (let i = 0; i < this.data.length; i++) {
             let x = (this.canvas.width - 100) * this.normalizedDates[i] + 80;
             let y = (this.canvas.height - 50) - (this.data[i] / maxValue) * (this.canvas.height - 90);
+            this.points[i]['x'] = x;
+            this.points[i]['y'] = y;
             this.coordinates.push([x, y]);
         }
+        console.log(this.points);
         this.coordinates.sort((a, b) => a[0] - b[0]);
     }
 
@@ -77,6 +93,8 @@ class Chart {
         this.data = newData.data;
         this.labels = newData.labels;
         this.model = model;
+        this.points = [];
+        this.setPoints();
         this.dateTransformation();
         this.coordinateGeneration();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -99,6 +117,7 @@ class Chart {
     }
 
     initialDraw() {
+        this.setPoints();
         this.resizeCanvas();
         this.dateTransformation();
         this.coordinateGeneration();

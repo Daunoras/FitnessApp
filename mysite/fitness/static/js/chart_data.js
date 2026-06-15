@@ -31,12 +31,47 @@ function validateDates(startDate, endDate) {
     return true;
 }
 
+function findPoint(mouseX, mouseY) {
+
+    for (const point of myChart.points) {
+
+        const dx = mouseX - point.x;
+        const dy = mouseY - point.y;
+
+        const distance = Math.sqrt(dx*dx + dy*dy);
+
+        if (distance < 8) {
+            return point;
+        }
+    }
+
+    return null;
+}
+
+function showTooltip(point, pageX, pageY) {
+
+    tooltip.innerHTML =
+        `Date: ${point.date}<br>
+         Value: ${point.value}`;
+
+    tooltip.style.left = pageX + 10 + "px";
+    tooltip.style.top = pageY + 10 + "px";
+
+    tooltip.style.display = "block";
+}
+
+function hideTooltip() {
+    tooltip.style.display = "none";
+}
+
 let myChart = null;
 document.addEventListener('DOMContentLoaded', function() {
     const modelSelector = document.getElementById('dataSelector');
     const dateFrom = document.getElementById('date_from');
     const dateTo = document.getElementById('date_to');
     const lift = document.getElementById('exerciseSelection');
+    const canvas = document.getElementById('myChart');
+
     fetchDataAndRenderChart(modelSelector.value, dateFrom.value, dateTo.value, lift.value);
 
     modelSelector.addEventListener('change', function() {
@@ -58,5 +93,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     lift.addEventListener('change', function() {
         fetchDataAndRenderChart(modelSelector.value, dateFrom.value, dateTo.value, this.value)
+    });
+
+    canvas.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        const point = findPoint(
+            e.clientX - rect.left,
+            e.clientY - rect.top
+        );
+        if (point) {
+            showTooltip(point, e.pageX, e.pageY);
+        }
+        else {
+            hideTooltip();
+        }
     });
 });
