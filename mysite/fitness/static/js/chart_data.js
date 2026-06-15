@@ -48,11 +48,26 @@ function findPoint(mouseX, mouseY) {
     return null;
 }
 
-function showTooltip(point, pageX, pageY) {
+function tooltipText(model, point) {
+    let text = '';
+    if (model == 'nutrition') {
+        text = `${point.date}<br>
+                Calories: ${point.value}`;
+    } else if (model == 'weight') {
+        text = `${point.date}<br>
+                Bodyweight: ${point.value}`;
+    } else if (model == 'exercise') {
+        let maxStrength = (((point.value % 1)) < 0.1)? point.value.toFixed(0) : point.value.toFixed(1);
+        text = `${point.date}<br>
+               Estimated MAX ${maxStrength} kg`;
+    }
 
-    tooltip.innerHTML =
-        `Date: ${point.date}<br>
-         Value: ${point.value}`;
+    return text;
+}
+
+function showTooltip(model, point, pageX, pageY) {
+
+    tooltip.innerHTML = tooltipText(model, point);
 
     tooltip.style.display = "block";
 
@@ -114,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.clientY - rect.top
         );
         if (point) {
-            showTooltip(point, e.pageX, e.pageY);
+            showTooltip(modelSelector.value, point, e.pageX, e.pageY);
         }
         else {
             hideTooltip();
