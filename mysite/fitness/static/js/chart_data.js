@@ -36,10 +36,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const modelSelector = document.getElementById('dataSelector');
     const dateFrom = document.getElementById('date_from');
     const dateTo = document.getElementById('date_to');
+    const lift = document.getElementById('exerciseSelection');
     fetchDataAndRenderChart(modelSelector.value, dateFrom.value, dateTo.value);
 
     modelSelector.addEventListener('change', function() {
-         fetchDataAndRenderChart(this.value, dateFrom.value, dateTo.value);
+        if (this.value == 'exercise'){
+            lift.style.display = 'inline';
+        } else {
+            lift.style.display = 'none';
+        }
+        fetchDataAndRenderChart(this.value, dateFrom.value, dateTo.value);
     });
 
     dateFrom.addEventListener('change', function() {

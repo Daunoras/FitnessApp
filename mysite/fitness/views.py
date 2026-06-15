@@ -298,7 +298,15 @@ def duplicate_set(request, pk):
 
 
 def chart_view(request):
-    return render(request, 'chart.html')
+    lifts = Exercise.objects.all()
+
+    return render(
+        request,
+        'chart.html',
+        {
+            "lifts": lifts
+        }
+    )
 
 def get_chart_data(request):
     if request.user.is_authenticated:
