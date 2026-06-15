@@ -7,17 +7,14 @@ li.nav-item {
 }
 
 #canvas-container {
-    width: 100%;
-    height: 100%;
+    width: 95%;
+    height: 95%;
     box-sizing: border-box;
-    padding: 20px;
 }
 
 #myChart {
     background-color: white;
     display: block;
-    width: 100%;
-    height: 100%;
 }
 
 #tooltip {
