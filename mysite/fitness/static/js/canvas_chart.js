@@ -25,11 +25,11 @@ class Chart {
     coordinateGeneration() {
         let maxValue = Math.max(...this.data);
         this.coordinates.length = 0;
-        this.data.forEach((value, index) => {
-            let x = (this.canvas.width - 100) * this.normalizedDates[index] + 80
-            let y = (this.canvas.height - 50) - (value / maxValue) * (this.canvas.height - 90);
+        for (let i = 0; i < this.data.length; i++) {
+            let x = (this.canvas.width - 100) * this.normalizedDates[i] + 80;
+            let y = (this.canvas.height - 50) - (this.data[i] / maxValue) * (this.canvas.height - 90);
             this.coordinates.push([x, y]);
-        });
+        }
         this.coordinates.sort((a, b) => a[0] - b[0]);
     }
 
@@ -38,13 +38,13 @@ class Chart {
         this.ctx.beginPath();
         this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
 
-        for (let i=1; i < this.coordinates.length; i++){
+        for (let i = 1; i < this.coordinates.length; i++){
             this.ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
         }
         this.ctx.strokeStyle = 'red';
         this.ctx.stroke();
 
-        for (let i=0; i < this.coordinates.length; i++) {
+        for (let i = 0; i < this.coordinates.length; i++) {
             this.ctx.beginPath();
             this.ctx.arc(this.coordinates[i][0], this.coordinates[i][1], 3, 0, 2 * Math.PI);
             this.ctx.fill();
