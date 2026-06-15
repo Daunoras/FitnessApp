@@ -37,11 +37,19 @@ class Chart {
         if (!this.ctx) return;
         this.ctx.beginPath();
         this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
-        this.coordinates.forEach(coordinate => {
-            this.ctx.lineTo(coordinate[0], coordinate[1]);
-        });
+
+        for (let i=1; i < this.coordinates.length; i++){
+            this.ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
+        }
         this.ctx.strokeStyle = 'red';
         this.ctx.stroke();
+
+        for (let i=0; i < this.coordinates.length; i++) {
+            this.ctx.beginPath();
+            this.ctx.arc(this.coordinates[i][0], this.coordinates[i][1], 3, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
+
     }
 
     drawAxis() {
