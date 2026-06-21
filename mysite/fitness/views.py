@@ -344,7 +344,6 @@ def get_chart_data(request):
                 max = (int(set.weight) * (1 + set.reps / 30)) if int(set.weight) > 0 else (1 + set.reps / 30)
                 if (date in maxes and max > maxes[date]) or date not in maxes:
                    maxes[date] = max
-
             labels = []
             data = []
             for key in maxes:
