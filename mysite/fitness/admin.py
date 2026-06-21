@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import DayOfEating, Profile, Muscle, Equipment, Exercise, Workout, WorkoutType, Set
+from .models import DayOfEating, Muscle, Equipment, Exercise, Workout, WorkoutType, Set
 
 class DayOfEatingAdmin(admin.ModelAdmin):
     list_display = ('date', 'kcal', 'protein', 'athlete')
@@ -7,7 +7,6 @@ class DayOfEatingAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DayOfEating)
-admin.site.register(Profile)
 admin.site.register(Muscle)
 admin.site.register(Equipment)
 admin.site.register(Exercise)

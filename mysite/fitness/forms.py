@@ -1,6 +1,5 @@
 from django import forms
-from .models import DayOfEating, Profile, Weighting, Workout, Set, Exercise
-from django.contrib.auth.models import User
+from .models import DayOfEating, Weighting, Workout, Set, Exercise
 
 class DayOfEatingCreateForm(forms.ModelForm):
     class Meta:
@@ -18,17 +17,6 @@ class DayOfEatingCreateForm(forms.ModelForm):
             raise forms.ValidationError("You already have an entry for this date.")
         return date
 
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-    class Meta:
-        model = User
-        fields = ['username', 'email']
-
-class ProfileUpdateForm(forms.ModelForm):
-
-    class Meta:
-        model = Profile
-        fields = []
 
 class WeightingCreateForm(forms.ModelForm):
     class Meta:

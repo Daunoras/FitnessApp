@@ -2,11 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import DayOfEating, Weighting, Workout, Set, Exercise
-from django.contrib.auth.forms import User
-from django.views.decorators.csrf import csrf_protect
-from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import DayOfEatingCreateForm, UserUpdateForm, ProfileUpdateForm, WeightingCreateForm, WorkoutCreateForm, SetCreateForm
+from .forms import DayOfEatingCreateForm, WeightingCreateForm, WorkoutCreateForm, SetCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
@@ -86,51 +83,6 @@ class DayOfEatingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
         day = self.get_object()
         return self.request.user == day.athlete
 
-
-@csrf_protect
-def register(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        password2 = request.POST['password2']
-        if password == password2:
-            if User.objects.filter(username=username).exists():
-                messages.error(request, f'Username {username} is already taken')
-                return redirect('register')
-            else:
-                if User.objects.filter(email=email).exists():
-                    messages.error(request, f'The email adress {email} is already taken')
-                    return redirect('register')
-                else:
-                    User.objects.create_user(username=username, email=email, password=password)
-                    messages.info(request, f'User {username} has been registered')
-                    return redirect('login')
-        else:
-            messages.error(request, 'The passwords do not match')
-            return redirect('register')
-    return render(request, 'register.html')
-
-@login_required
-def profile(request):
-    if request.method == "POST":
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, f"Profile updated")
-            return redirect('profile')
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
-
-    context = {
-        'u_form': u_form,
-        'p_form': p_form,
-    }
-
-    return render(request, 'profile.html', context)
 
 class WeightingListView(LoginRequiredMixin, ListView):
     model = Weighting
