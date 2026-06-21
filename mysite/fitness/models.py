@@ -19,11 +19,6 @@ class DayOfEating(models.Model):
     def add_protein(self, protein):
         self.protein += int(protein)
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    def __str__(self):
-        return self.user.username
-
 class Weighting(models.Model):
     athlete = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     weight = models.IntegerField('Weight')
