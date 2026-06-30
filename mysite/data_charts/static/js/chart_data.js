@@ -2,7 +2,7 @@ import Chart from './canvas_chart.js';
 
 function fetchDataAndRenderChart(model, startDate, endDate, lift) {
     if (validateDates(startDate, endDate)) {
-    const url = `/fitness/api/chart/data/?model=${model}&date_from=${startDate}&date_to=${endDate}&lift=${lift}`;
+    const url = `/data_charts/api/chart/data/?model=${model}&date_from=${startDate}&date_to=${endDate}&lift=${lift}`;
     fetch(url)
         .then(response => response.json())
         .then(data => {

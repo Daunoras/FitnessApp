@@ -9,6 +9,7 @@ urlpatterns = [
     path('fitness/', include('fitness.urls')),
     path('nutrition/', include('nutrition.urls')),
     path('weighting/', include('weighting.urls')),
+    path('data_charts/', include('data_charts.urls')),
     path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='fitness/', permanent=True)),

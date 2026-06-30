@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'data_charts/css/charts.css' %}">
+{% endblock %}
+
 {% block content %}
 
     <h1>Select Data to Display</h1>

@@ -7,8 +7,9 @@
   <!-- Add additional CSS in static file -->
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  {% block extra_css %}
+  {% endblock %}
 </head>
-
 <body>
  <nav class="navbar" >
   <div class="container-fluid">

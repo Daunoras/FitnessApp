@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Workout, Set, Exercise
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -7,8 +6,7 @@ from .forms import WorkoutCreateForm, SetCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
-from nutrition.models import DayOfEating
-from weighting.models import Weighting
+
 
 def index(request):
     context = {}
@@ -20,6 +18,7 @@ class WorkoutListView(LoginRequiredMixin, ListView):
     template_name = 'workouts.html'
     def get_queryset(self):
         return Workout.objects.filter(athlete=self.request.user).order_by('-date')
+
 
 class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
     model = Workout
@@ -79,6 +78,7 @@ class WorkoutCreateView(LoginRequiredMixin, CreateView):
         form.instance.athlete = self.request.user
         return super().form_valid(form)
 
+
 class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Workout
     fields = ['date', 'duration', 'type']
@@ -96,6 +96,7 @@ class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         workout = self.get_object()
         return self.request.user == workout.athlete
 
+
 class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Workout
     success_url = reverse_lazy('workouts')
@@ -104,6 +105,7 @@ class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         workout = self.get_object()
         return self.request.user == workout.athlete
+
 
 class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Set
@@ -130,66 +132,3 @@ def duplicate_set(request, pk):
     )
     return redirect('workout-details', pk=original_set.workout.pk)
 
-
-def chart_view(request):
-    lifts = Exercise.objects.all()
-
-    return render(
-        request,
-        'chart.html',
-        {
-            "lifts": lifts
-        }
-    )
-
-def get_chart_data(request):
-    if request.user.is_authenticated:
-
-        model_name = request.GET.get('model')
-        date_from = request.GET.get('date_from')
-        date_to = request.GET.get('date_to')
-        lift = request.GET.get('lift')
-
-        if model_name == 'nutrition':
-            nutrition_data = DayOfEating.objects.filter(athlete=request.user)
-            if date_from:
-                nutrition_data = nutrition_data.filter(date__gte=date_from)
-            if date_to:
-                nutrition_data = nutrition_data.filter(date__lte=date_to)
-            labels = [day.date for day in nutrition_data]
-            data = [day.kcal for day in nutrition_data]
-        elif model_name == 'weight':
-            weighting_data = Weighting.objects.filter(athlete=request.user)
-            if date_from:
-                weighting_data = weighting_data.filter(date__gte=date_from)
-            if date_to:
-                weighting_data = weighting_data.filter(date__lte=date_to)
-            labels = [weighting.date for weighting in weighting_data]
-            data = [weighting.weight for weighting in weighting_data]
-        elif model_name == 'exercise':
-            exercise_data = Set.objects.filter(workout__athlete=request.user, exercise=lift)
-            if date_from:
-                exercise_data = exercise_data.filter(workout__date__gte=date_from)
-            if date_to:
-                exercise_data = exercise_data.filter(workout__date__lte=date_to)
-            maxes = {}
-            for set in exercise_data:
-                date = set.workout.date
-                max = (int(set.weight) * (1 + set.reps / 30)) if int(set.weight) > 0 else (1 + set.reps / 30)
-                if (date in maxes and max > maxes[date]) or date not in maxes:
-                   maxes[date] = max
-            labels = []
-            data = []
-            for key in maxes:
-                labels.append(key)
-                data.append(maxes[key])
-        else:
-            return JsonResponse({'error': 'Invalid model'}, status=400)
-
-    else:
-        return JsonResponse({'error': 'Unauthorized'}, status=401)
-
-    return JsonResponse({
-        'labels': labels,
-        'data': data,
-    })
