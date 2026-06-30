@@ -15,6 +15,9 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'fitness.apps.FitnessConfig',
     'users.apps.UsersConfig',
+    'nutrition.apps.NutritionConfig',
+    'weighting.apps.WeightingConfig',
+    'data_charts.apps.DataChartsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,6 +88,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

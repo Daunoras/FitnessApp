@@ -1,0 +1,7 @@
+body {
+    background: #dddddd;
+}
+
+li.nav-item {
+    display: inline;
+}

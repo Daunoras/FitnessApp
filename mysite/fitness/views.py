@@ -1,143 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import DayOfEating, Weighting, Workout, Set, Exercise
+from .models import Workout, Set, Exercise
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import DayOfEatingCreateForm, WeightingCreateForm, WorkoutCreateForm, SetCreateForm
+from .forms import WorkoutCreateForm, SetCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
+
 
 def index(request):
     context = {}
     return render(request, 'index.html', context=context)
 
-class DaysOfEatingListView(LoginRequiredMixin, ListView):
-    model = DayOfEating
-    template_name = 'days_of_eating.html'
-
-    def get_queryset(self):
-        return DayOfEating.objects.filter(athlete=self.request.user).order_by('-date')
-
-
-class DayOfEatingDetailView(LoginRequiredMixin, DetailView):
-    model = DayOfEating
-    template_name = 'day_of_eating_details.html'
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        if 'action' in request.POST:
-            action = request.POST['action']
-            if action == 'Add calories':
-                number = request.POST.get('calories')
-                self.object.add_calories(int(number))
-            elif action == 'Add protein':
-                number = request.POST.get('protein')
-                self.object.add_protein(int(number))
-            self.object.save()
-
-        return self.get(request, *args, **kwargs)
-
-    def get_success_url(self):
-        return reverse_lazy('nutrition-details', kwargs={'pk': self.object.pk})
-
-class DayOfEatingCreateView(LoginRequiredMixin, CreateView):
-    model = DayOfEating
-    success_url = reverse_lazy('nutrition')
-    template_name = 'nutrition_add.html'
-    form_class = DayOfEatingCreateForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.instance.athlete = self.request.user
-        return super().form_valid(form)
-
-class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = DayOfEating
-    fields = ['kcal', 'protein']
-    template_name = 'nutrition_add.html'
-
-    def get_success_url(self):
-        pk = self.object.pk
-        return reverse_lazy('nutrition-details', args=[pk])
-
-    def form_valid(self, form):
-        form.instance.athlete = self.request.user
-        return super().form_valid(form)
-
-    def test_func(self):
-        day = self.get_object()
-        return self.request.user == day.athlete
-
-class DayOfEatingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = DayOfEating
-    success_url = reverse_lazy('nutrition')
-    template_name = 'nutrition_delete.html'
-
-    def test_func(self):
-        day = self.get_object()
-        return self.request.user == day.athlete
-
-
-class WeightingListView(LoginRequiredMixin, ListView):
-    model = Weighting
-    template_name = 'weighting.html'
-    def get_queryset(self):
-        return Weighting.objects.filter(athlete=self.request.user).order_by('-date')
-
-class WeightingCreateView(LoginRequiredMixin, CreateView):
-    model = Weighting
-    success_url = reverse_lazy('weighting')
-    template_name = 'weighting_add.html'
-    form_class = WeightingCreateForm
-
-    def form_valid(self, form):
-        form.instance.athlete = self.request.user
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'create'
-        return context
-
-class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Weighting
-    fields = ['weight', 'date']
-    template_name = 'weighting_add.html'
-    success_url = reverse_lazy('weighting')
-
-    def form_valid(self, form):
-        form.instance.athlete = self.request.user
-        return super().form_valid(form)
-
-    def test_func(self):
-        day = self.get_object()
-        return self.request.user == day.athlete
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['action'] = 'update'
-        return context
-
-class WeightingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Weighting
-    success_url = reverse_lazy('weighting')
-    template_name = 'weighting_delete.html'
-
-    def test_func(self):
-        day = self.get_object()
-        return self.request.user == day.athlete
 
 class WorkoutListView(LoginRequiredMixin, ListView):
     model = Workout
     template_name = 'workouts.html'
     def get_queryset(self):
         return Workout.objects.filter(athlete=self.request.user).order_by('-date')
+
 
 class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
     model = Workout
@@ -197,6 +78,7 @@ class WorkoutCreateView(LoginRequiredMixin, CreateView):
         form.instance.athlete = self.request.user
         return super().form_valid(form)
 
+
 class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Workout
     fields = ['date', 'duration', 'type']
@@ -214,6 +96,7 @@ class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         workout = self.get_object()
         return self.request.user == workout.athlete
 
+
 class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Workout
     success_url = reverse_lazy('workouts')
@@ -222,6 +105,7 @@ class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         workout = self.get_object()
         return self.request.user == workout.athlete
+
 
 class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Set
@@ -248,66 +132,3 @@ def duplicate_set(request, pk):
     )
     return redirect('workout-details', pk=original_set.workout.pk)
 
-
-def chart_view(request):
-    lifts = Exercise.objects.all()
-
-    return render(
-        request,
-        'chart.html',
-        {
-            "lifts": lifts
-        }
-    )
-
-def get_chart_data(request):
-    if request.user.is_authenticated:
-
-        model_name = request.GET.get('model')
-        date_from = request.GET.get('date_from')
-        date_to = request.GET.get('date_to')
-        lift = request.GET.get('lift')
-
-        if model_name == 'nutrition':
-            nutrition_data = DayOfEating.objects.filter(athlete=request.user)
-            if date_from:
-                nutrition_data = nutrition_data.filter(date__gte=date_from)
-            if date_to:
-                nutrition_data = nutrition_data.filter(date__lte=date_to)
-            labels = [day.date for day in nutrition_data]
-            data = [day.kcal for day in nutrition_data]
-        elif model_name == 'weight':
-            weighting_data = Weighting.objects.filter(athlete=request.user)
-            if date_from:
-                weighting_data = weighting_data.filter(date__gte=date_from)
-            if date_to:
-                weighting_data = weighting_data.filter(date__lte=date_to)
-            labels = [weighting.date for weighting in weighting_data]
-            data = [weighting.weight for weighting in weighting_data]
-        elif model_name == 'exercise':
-            exercise_data = Set.objects.filter(workout__athlete=request.user, exercise=lift)
-            if date_from:
-                exercise_data = exercise_data.filter(workout__date__gte=date_from)
-            if date_to:
-                exercise_data = exercise_data.filter(workout__date__lte=date_to)
-            maxes = {}
-            for set in exercise_data:
-                date = set.workout.date
-                max = (int(set.weight) * (1 + set.reps / 30)) if int(set.weight) > 0 else (1 + set.reps / 30)
-                if (date in maxes and max > maxes[date]) or date not in maxes:
-                   maxes[date] = max
-            labels = []
-            data = []
-            for key in maxes:
-                labels.append(key)
-                data.append(maxes[key])
-        else:
-            return JsonResponse({'error': 'Invalid model'}, status=400)
-
-    else:
-        return JsonResponse({'error': 'Unauthorized'}, status=401)
-
-    return JsonResponse({
-        'labels': labels,
-        'data': data,
-    })
