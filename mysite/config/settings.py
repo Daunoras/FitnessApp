@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'fitness.apps.FitnessConfig',
     'users.apps.UsersConfig',
     'nutrition.apps.NutritionConfig',
+    'weighting.apps.WeightingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

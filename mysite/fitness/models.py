@@ -3,13 +3,6 @@ from datetime import date
 from django.contrib.auth.models import User
 
 
-class Weighting(models.Model):
-    athlete = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    weight = models.IntegerField('Weight')
-    date = models.DateField('Date', default=date.today)
-    def __str__(self):
-        return f"{self.date}:  {self.weight}kg"
-
 class Muscle(models.Model):
     name = models.CharField('Name', max_length=30)
     body_part = models.CharField('Body part', null=True, blank=True, max_length=30)

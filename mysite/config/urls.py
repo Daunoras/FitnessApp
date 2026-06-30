@@ -8,6 +8,7 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('fitness/', include('fitness.urls')),
     path('nutrition/', include('nutrition.urls')),
+    path('weighting/', include('weighting.urls')),
     path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='fitness/', permanent=True)),
