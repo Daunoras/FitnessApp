@@ -1,23 +1,37 @@
 import Chart from './canvas_chart.js';
 
-function fetchDataAndRenderChart(model, startDate, endDate, lift) {
-    if (validateDates(startDate, endDate)) {
+
+ async function fetchChartData(model, startDate, endDate, lift) {
+    if (!validateDates(startDate, endDate)) {
+        return null;
+    }
     const url = `/data_charts/api/chart/data/?model=${model}&date_from=${startDate}&date_to=${endDate}&lift=${lift}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (myChart) {
-                myChart.updateData(data, model)
-            } else {
-                myChart = new Chart('myChart', data, model);
-                myChart.initialDraw();
-            }
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    } else {
-        return;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching chart data:", error);
+        return null;
     }
 }
+
+
+async function loadChart(model, dateFrom, dateTo, lift) {
+    const data = await fetchChartData(model, dateFrom, dateTo, lift);
+    if (!data) return;
+
+    if (myChart) {
+        myChart.updateData(data, model);
+    } else {
+        myChart = new Chart("myChart", data, model);
+        myChart.initialDraw();
+    }
+}
+
 
 function validateDates(startDate, endDate) {
     const warning = document.getElementById('warning');
@@ -99,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const lift = document.getElementById('exerciseSelection');
     const canvas = document.getElementById('myChart');
 
-    fetchDataAndRenderChart(modelSelector.value, dateFrom.value, dateTo.value, lift.value);
+    loadChart(modelSelector.value, dateFrom.value, dateTo.value, lift.value);
 
     modelSelector.addEventListener('change', function() {
         if (this.value == 'exercise'){
@@ -107,19 +121,19 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             lift.style.display = 'none';
         }
-        fetchDataAndRenderChart(this.value, dateFrom.value, dateTo.value, lift.value);
+        loadChart(this.value, dateFrom.value, dateTo.value, lift.value);
     });
 
     dateFrom.addEventListener('change', function() {
-        fetchDataAndRenderChart(modelSelector.value, this.value, dateTo.value, lift.value)
+        loadChart(modelSelector.value, this.value, dateTo.value, lift.value)
     });
 
     dateTo.addEventListener('change', function() {
-        fetchDataAndRenderChart(modelSelector.value, dateFrom.value, this.value, lift.value)
+        loadChart(modelSelector.value, dateFrom.value, this.value, lift.value)
     });
 
     lift.addEventListener('change', function() {
-        fetchDataAndRenderChart(modelSelector.value, dateFrom.value, dateTo.value, this.value)
+        loadChart(modelSelector.value, dateFrom.value, dateTo.value, this.value)
     });
 
     canvas.addEventListener('mousemove', e => {
