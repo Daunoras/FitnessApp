@@ -20,16 +20,17 @@ import Chart from './canvas_chart.js';
 }
 
 
-async function loadChart(model, dateFrom, dateTo, lift) {
+async function loadChart(model, dateFrom, dateTo, lift, chart, canvasId) {
     const data = await fetchChartData(model, dateFrom, dateTo, lift);
     if (!data) return;
 
-    if (myChart) {
-        myChart.updateData(data, model);
+    if (chart) {
+        chart.updateData(data, model);
     } else {
-        myChart = new Chart("myChart", data, model);
-        myChart.initialDraw();
+        chart = new Chart(canvasId, data, model);
+        chart.initialDraw();
     }
+    return chart;
 }
 
 
@@ -47,7 +48,7 @@ function validateDates(startDate, endDate) {
 
 function findPoint(mouseX, mouseY) {
 
-    for (const point of myChart.points) {
+    for (const point of dataChart.points) {
 
         const dx = mouseX - point.x;
         const dy = mouseY - point.y;
@@ -105,15 +106,15 @@ function hideTooltip() {
     tooltip.style.display = "none";
 }
 
-let myChart = null;
-document.addEventListener('DOMContentLoaded', function() {
+let dataChart = null;
+document.addEventListener('DOMContentLoaded', async function() {
     const modelSelector = document.getElementById('dataSelector');
     const dateFrom = document.getElementById('date_from');
     const dateTo = document.getElementById('date_to');
     const lift = document.getElementById('exerciseSelection');
-    const canvas = document.getElementById('myChart');
+    const canvas = document.getElementById('statisticsDataChart');
 
-    loadChart(modelSelector.value, dateFrom.value, dateTo.value, lift.value);
+    dataChart = await loadChart(modelSelector.value, dateFrom.value, dateTo.value, lift.value, dataChart, 'statisticsDataChart');
 
     modelSelector.addEventListener('change', function() {
         if (this.value == 'exercise'){
@@ -121,19 +122,19 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             lift.style.display = 'none';
         }
-        loadChart(this.value, dateFrom.value, dateTo.value, lift.value);
+        loadChart(this.value, dateFrom.value, dateTo.value, lift.value, dataChart, 'statisticsDataChart');
     });
 
     dateFrom.addEventListener('change', function() {
-        loadChart(modelSelector.value, this.value, dateTo.value, lift.value)
+        loadChart(modelSelector.value, this.value, dateTo.value, lift.value, dataChart, 'statisticsDataChart')
     });
 
     dateTo.addEventListener('change', function() {
-        loadChart(modelSelector.value, dateFrom.value, this.value, lift.value)
+        loadChart(modelSelector.value, dateFrom.value, this.value, lift.value, dataChart, 'statisticsDataChart')
     });
 
     lift.addEventListener('change', function() {
-        loadChart(modelSelector.value, dateFrom.value, dateTo.value, this.value)
+        loadChart(modelSelector.value, dateFrom.value, dateTo.value, this.value, dataChart, 'statisticsDataChart')
     });
 
     canvas.addEventListener('mousemove', e => {
