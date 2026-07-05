@@ -49,7 +49,7 @@ class Chart {
     }
 
     drawLineChart() {
-        if (!this.ctx) return;
+        if (!this.ctx || this.coordinates.length == 0) return;
         this.ctx.beginPath();
         this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
 
