@@ -1,7 +1,25 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'data_charts/css/charts.css' %}">
+{% endblock %}
 
 {% block content %}
   <h1>FitnessApp</h1>
   <p>Eat, train, sleep, repeat</p>
+  <p id="warning" style="color: red; display:none;"></p>
+
+    <div id="nutrition-canvas-container" style="padding: 20px;">
+        <canvas id="nutrition-chart" ></canvas>
+    </div>
+
+    <div id="bodyweight-canvas-container" style="padding: 20px;">
+        <canvas id="weight-chart" ></canvas>
+    </div>
+
+    <div id="tooltip"></div>
+
+    <script type="module" src="{% static 'js/dashboard_chart_controller.js' %}"></script>
 
 {% endblock %}
