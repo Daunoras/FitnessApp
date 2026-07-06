@@ -25,9 +25,11 @@ class ActivityCalendar {
     }
 
     render() {
-        let day = document.createElement("div");
-        day.textContent = "įterpta";
-        this.container.appendChild(day);
+        for (let day in this.days) {
+            let dayCard = document.createElement("div");
+            dayCard.textContent = day;
+            this.container.appendChild(dayCard);
+        }
     }
 }
 
