@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from fitness.models import Exercise, Set
+from fitness.models import Exercise, Set, Workout
 from nutrition.models import DayOfEating
 from weighting.models import Weighting
 from datetime import date, timedelta
@@ -83,7 +83,10 @@ def get_calendar_data(request):
     if end.weekday() != 6:
         end = end + timedelta(days=(6 - end.weekday()))
 
+    workouts = Workout.objects.filter(athlete=request.user, date__gte=start)
+
     current_day = start
+    workout_type = ''
     while current_day <= end:
         is_today = False
         is_future = False
@@ -91,8 +94,14 @@ def get_calendar_data(request):
             is_today = True
         elif current_day > today:
             is_future = True
-        day_info = {'date': current_day, 'is_today': is_today, 'is_future': is_future}
+
+        for workout in workouts:
+            if workout.date == current_day:
+                workout_type = workout.type.name
+
+        day_info = {'date': current_day, 'is_today': is_today, 'is_future': is_future, 'workout_type': workout_type}
         days.append(day_info)
+        workout_type = ''
         current_day += timedelta(days=1)
 
     return JsonResponse(days, safe=False)

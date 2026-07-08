@@ -8,7 +8,7 @@ class ActivityCalendar {
         console.log(this.days);
         for (let day of this.days) {
             let dayCard = document.createElement("div");
-            dayCard.textContent = day.date;
+            dayCard.innerHTML = `<span>${day.date}</span><br><span>${day.workout_type}</span>`;
             dayCard.className = 'day';
             if (day.is_today == true) {
                 dayCard.classList.add('today')
