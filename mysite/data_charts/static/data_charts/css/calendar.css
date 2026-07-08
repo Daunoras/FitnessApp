@@ -1,0 +1,38 @@
+.activity-calendar {
+    width: 60%;
+}
+
+#calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.day {
+    min-height: 90px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 6px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: white;
+}
+
+.today {
+    border: 1px solid red;
+}
+
+.future {
+    background: grey;
+}
+
+.day-number {
+    font-weight: bold;
+}
+
+.activities {
+    margin-top: 4px;
+    overflow: hidden;
+}
