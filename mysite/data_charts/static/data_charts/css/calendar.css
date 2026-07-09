@@ -36,3 +36,8 @@
     margin-top: 4px;
     overflow: hidden;
 }
+
+#menu {
+    min-height: 200px;
+    border-radius: 6px;
+}

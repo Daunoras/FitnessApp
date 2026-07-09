@@ -87,6 +87,8 @@ def get_calendar_data(request):
 
     current_day = start
     workout_type = ''
+    workout_add_url = ''
+    workout_view_url = ''
     while current_day <= end:
         is_today = False
         is_future = False
@@ -95,13 +97,23 @@ def get_calendar_data(request):
         elif current_day > today:
             is_future = True
 
+        workout_add_url = f"workouts/add/?date={current_day.isoformat()}"
+
         for workout in workouts:
             if workout.date == current_day:
                 workout_type = workout.type.name
+                workout_view_url = f"workouts/{workout.pk}"
 
-        day_info = {'date': current_day, 'is_today': is_today, 'is_future': is_future, 'workout_type': workout_type}
+        day_info = {'date': current_day,
+                    'is_today': is_today,
+                    'is_future': is_future,
+                    'workout_type': workout_type,
+                    'addWorkoutURL': workout_add_url,
+                    'viewWorkoutURL': workout_view_url}
         days.append(day_info)
         workout_type = ''
+        workout_add_url = ''
+        workout_view_url = ''
         current_day += timedelta(days=1)
 
     return JsonResponse(days, safe=False)
