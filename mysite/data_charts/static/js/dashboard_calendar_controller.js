@@ -20,6 +20,9 @@ async function fetchCalendarData() {
 
 function updatePopover(day) {
     let trainingButton = document.getElementById("training-button");
+    let nutritionButton = document.getElementById("nutrition-button");
+    let weightingButton = document.getElementById("weighting-button");
+
     if (day.workout_type) {
         trainingButton.textContent = "View workout";
         trainingButton.href = day.viewWorkoutURL;
@@ -27,6 +30,23 @@ function updatePopover(day) {
         trainingButton.textContent = "Add workout";
         trainingButton.href = day.addWorkoutURL;
     }
+
+    if (day.nutritionInfo) {
+        nutritionButton.textContent = "View nutrition";
+        nutritionButton.href = day.viewNutritionURL;
+    } else {
+        nutritionButton.textContent = "Add nutrition";
+        nutritionButton.href = day.addNutritionURL;
+    }
+
+    if (day.weightInfo) {
+        weightingButton.textContent = "View weight";
+        weightingButton.href = day.viewWeightingURL;
+    } else {
+        weightingButton.textContent = "Add weighting";
+        weightingButton.href = day.addWeightingURL;
+    }
+
 }
 
 const calendarContainer = document.getElementById("calendar-grid");
@@ -42,7 +62,14 @@ calendarContainer.addEventListener("click", (e) => {
         return;
     }
     const day = activityCalendar.dayData.get(card);
-    document.getElementById("menu-info").innerHTML = `<span>${day.date}</span> <br> <span>${day.workout_type}</span>`;
+    document.getElementById("menu-info").innerHTML =
+        `<span>${day.date}</span>
+        <br>
+        <span>${day.workout_type}</span>
+        <br>
+        <span>${day.nutritionInfo}</span>
+        <br>
+        <span>${day.weightInfo}</span>`;
     activityCalendar.selectedDay = day;
     updatePopover(day);
     menu.showPopover();

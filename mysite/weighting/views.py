@@ -27,6 +27,15 @@ class WeightingCreateView(LoginRequiredMixin, CreateView):
         context['action'] = 'create'
         return context
 
+    def get_initial(self):
+        initial = super().get_initial()
+
+        date = self.request.GET.get("date")
+        if date:
+            initial["date"] = date
+
+        return initial
+
 
 class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Weighting
