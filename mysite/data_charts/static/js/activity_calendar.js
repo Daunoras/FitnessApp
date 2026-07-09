@@ -9,7 +9,15 @@ class ActivityCalendar {
     render() {
         for (let day of this.days) {
             let dayCard = document.createElement("div");
-            dayCard.innerHTML = `<span>${day.date}</span><br><span>${day.workout_type}</span>`;
+            dayCard.innerHTML =
+                `<span>${day.date}</span>
+                    <br>
+                <span>${day.workout_type}</span>
+                    <br>
+                <span class=small-text>${day.nutritionInfo}</span>
+                    <br>
+                <span class=small-text>${day.weightInfo}</span>`;
+
             dayCard.className = 'day';
             dayCard.classList.add(`${day.date}`)
             if (day.is_today == true) {

@@ -50,6 +50,15 @@ class DayOfEatingCreateView(LoginRequiredMixin, CreateView):
         form.instance.athlete = self.request.user
         return super().form_valid(form)
 
+    def get_initial(self):
+        initial = super().get_initial()
+
+        date = self.request.GET.get("date")
+        if date:
+            initial["date"] = date
+
+        return initial
+
 class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = DayOfEating
     fields = ['kcal', 'protein']

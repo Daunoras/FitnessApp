@@ -41,3 +41,7 @@
     min-height: 200px;
     border-radius: 6px;
 }
+
+.small-text {
+    font-size: x-small;
+}

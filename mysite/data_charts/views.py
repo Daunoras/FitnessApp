@@ -84,11 +84,21 @@ def get_calendar_data(request):
         end = end + timedelta(days=(6 - end.weekday()))
 
     workouts = Workout.objects.filter(athlete=request.user, date__gte=start)
+    nutrition = DayOfEating.objects.filter(athlete=request.user, date__gte=start)
+    weighting = Weighting.objects.filter(athlete=request.user, date__gte=start)
 
     current_day = start
     workout_type = ''
+    eating_info = ''
+    weight_info = ''
+
+    nutrition_add_url = ''
+    nutrition_view_url = ''
+    weighting_add_url = ''
+    weighting_view_url = ''
     workout_add_url = ''
     workout_view_url = ''
+
     while current_day <= end:
         is_today = False
         is_future = False
@@ -98,6 +108,18 @@ def get_calendar_data(request):
             is_future = True
 
         workout_add_url = f"workouts/add/?date={current_day.isoformat()}"
+        nutrition_add_url = f"/nutrition/add?date={current_day.isoformat()}"
+        weighting_add_url = f"/weighting/add?date={current_day.isoformat()}"
+
+        for day_nutrition in nutrition:
+            if day_nutrition.date == current_day:
+                eating_info = f"{day_nutrition.kcal}kcal, {day_nutrition.protein} g protein"
+                nutrition_view_url = f"/nutrition/{day_nutrition.pk}"
+
+        for weight in weighting:
+            if weight.date == current_day:
+                weight_info = f"Bodyweight: {weight.weight} kg"
+                weighting_view_url = f"/weighting/{weight.pk}/update"
 
         for workout in workouts:
             if workout.date == current_day:
@@ -108,10 +130,22 @@ def get_calendar_data(request):
                     'is_today': is_today,
                     'is_future': is_future,
                     'workout_type': workout_type,
+                    'nutritionInfo': eating_info,
+                    'weightInfo': weight_info,
                     'addWorkoutURL': workout_add_url,
-                    'viewWorkoutURL': workout_view_url}
+                    'viewWorkoutURL': workout_view_url,
+                    'addNutritionURL': nutrition_add_url,
+                    'viewNutritionURL': nutrition_view_url,
+                    'addWeightingURL': weighting_add_url,
+                    'viewWeightingURL': weighting_view_url}
         days.append(day_info)
         workout_type = ''
+        eating_info = ''
+        weight_info = ''
+        nutrition_add_url = ''
+        nutrition_view_url = ''
+        weighting_add_url = ''
+        weighting_view_url = ''
         workout_add_url = ''
         workout_view_url = ''
         current_day += timedelta(days=1)
