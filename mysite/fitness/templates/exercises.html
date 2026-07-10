@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>My custom exercises</h1>
+
+    <a href="{% url 'exercise-add' %}"><button>Add a custom exercise</button></a>
+
+    {% if exercise_list %}
+    <ul>
+        {% for exercise in exercise_list %}
+            <li id="days">
+            <a  href="{% url 'exercise-update' exercise.pk %}">{{ exercise|stringformat:'s' }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You have not created any custom exercise yet.</p>
+    {% endif %}
+
+{% endblock %}

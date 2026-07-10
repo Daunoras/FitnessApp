@@ -18,6 +18,37 @@ def chart_view(request):
     )
 
 
+def calculate_bodyweight(date):
+    exact = Weighting.objects.filter(date=date).first()
+    if exact:
+        return exact
+
+    previous_record = Weighting.objects.filter(date__lt=date).order_by("-date").first()
+    later_record = Weighting.objects.filter(date__gt=date).order_by("date").first()
+
+    if previous_record and later_record:
+        total_days = (later_record.date - previous_record.date).days
+        elapsed_days = (date - previous_record.date).days
+        coefficient = elapsed_days / total_days
+        return previous_record.weight + coefficient * (later_record.weight - previous_record.weight)
+    elif previous_record:
+        return previous_record.weight
+    elif later_record:
+        return later_record.weight
+    else:
+        return 0
+
+
+def calculate_lift_max(weight, reps, exercise, date):
+    if exercise.uses_bodyweight:
+        bodyweight = calculate_bodyweight(date)
+        total_weight = int(weight) + bodyweight
+        estimated_max = (total_weight * (1 + reps / 30)) - bodyweight
+    else:
+        estimated_max = (int(weight) * (1 + reps / 30))
+    return estimated_max
+
+
 def get_chart_data(request):
     if request.user.is_authenticated:
 
@@ -51,7 +82,7 @@ def get_chart_data(request):
             maxes = {}
             for set in exercise_data:
                 date = set.workout.date
-                max = (int(set.weight) * (1 + set.reps / 30)) if int(set.weight) > 0 else (1 + set.reps / 30)
+                max = calculate_lift_max(set.weight, set.reps, set.exercise, date)
                 if (date in maxes and max > maxes[date]) or date not in maxes:
                    maxes[date] = max
             labels = []

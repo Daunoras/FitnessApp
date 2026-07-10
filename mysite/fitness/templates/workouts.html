@@ -3,7 +3,9 @@
 {% block content %}
     <h1>Workouts</h1>
 
-     <a href="{% url 'workout-add' %}"><button>ADD</button></a>
+     <a href="{% url 'workout-add' %}"><button>ADD A WORKOUT</button></a>
+
+    <a href="{% url 'exercises' %}"><button>My custom exercises</button></a>
 
     {% if workout_list %}
     <ul>

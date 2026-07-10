@@ -1,5 +1,5 @@
 from django import forms
-from .models import Workout, Set
+from .models import Workout, Set, Exercise
 
 
 class WorkoutCreateForm(forms.ModelForm):
@@ -15,4 +15,17 @@ class SetCreateForm(forms.ModelForm):
         fields = ['exercise', 'weight', 'reps']
         widgets = {
             'workout': forms.HiddenInput()
+        }
+
+
+class ExerciseCreateForm(forms.ModelForm):
+    class Meta:
+        model = Exercise
+        fields = ['name',
+                  'description',
+                  'target_muscle',
+                  'equipment',
+                  'uses_bodyweight']
+        widgets = {
+            'created_by': forms.HiddenInput()
         }
