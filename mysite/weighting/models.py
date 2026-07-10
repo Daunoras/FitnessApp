@@ -6,5 +6,6 @@ class Weighting(models.Model):
     athlete = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     weight = models.IntegerField('Weight')
     date = models.DateField('Date', default=date.today)
+
     def __str__(self):
         return f"{self.date}:  {self.weight}kg"
