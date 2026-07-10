@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Workout, Set, Exercise
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import WorkoutCreateForm, SetCreateForm
+from .forms import WorkoutCreateForm, SetCreateForm, ExerciseCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
@@ -16,6 +16,7 @@ def index(request):
 class WorkoutListView(LoginRequiredMixin, ListView):
     model = Workout
     template_name = 'workouts.html'
+
     def get_queryset(self):
         return Workout.objects.filter(athlete=self.request.user).order_by('-date')
 
@@ -140,4 +141,46 @@ def duplicate_set(request, pk):
         reps=original_set.reps,
     )
     return redirect('workout-details', pk=original_set.workout.pk)
+
+
+class ExerciseCreateView(LoginRequiredMixin, CreateView):
+    model = Exercise
+    template_name = 'exercise_add.html'
+    form_class = ExerciseCreateForm
+
+    def get_success_url(self):
+        return reverse_lazy('workouts')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+class ExerciseListView(LoginRequiredMixin, ListView):
+    model = Exercise
+    template_name = 'exercises.html'
+
+    def get_queryset(self):
+        return Exercise.objects.filter(created_by=self.request.user)
+
+
+class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Exercise
+    fields = ['name',
+              'description',
+              'target_muscle',
+              'equipment',
+              'uses_bodyweight']
+    template_name = 'exercise_add.html'
+
+    def get_success_url(self):
+        return reverse_lazy('exercises')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        exercise = self.get_object()
+        return self.request.user == exercise.created_by
 
