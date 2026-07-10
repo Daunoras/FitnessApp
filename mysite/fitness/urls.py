@@ -14,4 +14,5 @@ urlpatterns = [
     path('exercise/add', views.ExerciseCreateView.as_view(), name='exercise-add'),
     path('exercise/', views.ExerciseListView.as_view(), name='exercises'),
     path('exercise/<int:pk>/update', views.ExerciseUpdateView.as_view(), name='exercise-update'),
+    path('exercise/<int:pk>/delete', views.ExerciseDeleteView.as_view(), name='exercise-delete'),
 ]

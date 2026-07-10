@@ -12,5 +12,8 @@
             <button type="submit">Save</button>
         </div>
     </form>
+    {% if action == 'update' %}
+        <a href="{% url 'exercise-delete' object.id %}" ><button id="destroy">Delete</button></a>
+    {% endif %}
     </div>
 {% endblock content %}

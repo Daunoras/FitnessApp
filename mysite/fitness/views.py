@@ -184,3 +184,17 @@ class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         exercise = self.get_object()
         return self.request.user == exercise.created_by
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'update'
+        return context
+
+
+class ExerciseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Exercise
+    success_url = reverse_lazy('exercises')
+    template_name = 'exercise_delete.html'
+
+    def test_func(self):
+        exercise = self.get_object()
+        return self.request.user == exercise.created_by
