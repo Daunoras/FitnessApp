@@ -122,3 +122,5 @@ EMAIL_HOST_USER = 'justdaunoras@gmail.com'
 EMAIL_HOST_PASSWORD = 'mmsm thlo doak wpky'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SYSTEM_USER = 1
