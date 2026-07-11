@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'nutrition.apps.NutritionConfig',
     'weighting.apps.WeightingConfig',
     'data_charts.apps.DataChartsConfig',
+    'personal_settings.apps.PersonalSettingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

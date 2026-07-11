@@ -14,4 +14,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='fitness/', permanent=True)),
     path('accounts/', include('allauth.urls')),
+    path('settings/', include('personal_settings.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
