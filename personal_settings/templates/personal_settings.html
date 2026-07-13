@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'personal_settings/css/personal_settings.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="content-section">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <h1>Personal settings</h1>
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
+    </form>
+
+    </div>
+{% endblock content %}

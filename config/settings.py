@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'nutrition.apps.NutritionConfig',
     'weighting.apps.WeightingConfig',
     'data_charts.apps.DataChartsConfig',
+    'personal_settings.apps.PersonalSettingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,3 +122,5 @@ EMAIL_HOST_USER = 'justdaunoras@gmail.com'
 EMAIL_HOST_PASSWORD = 'mmsm thlo doak wpky'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SYSTEM_USER = 1

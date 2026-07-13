@@ -4,10 +4,23 @@ from fitness.models import Exercise, Set, Workout
 from nutrition.models import DayOfEating
 from weighting.models import Weighting
 from datetime import date, timedelta
-
+from personal_settings.services import get_personal_settings
+from personal_settings.models import ExerciseChoices
+from django.db.models import Q
+from django.conf import settings
 
 def chart_view(request):
-    lifts = Exercise.objects.all()
+    personal_settings = get_personal_settings(request.user)
+    query = Q()
+
+    if ExerciseChoices.CUSTOM in personal_settings.exercise_pool:
+        query |= Q(created_by=request.user)
+    if ExerciseChoices.DEFAULT in personal_settings.exercise_pool:
+        query |= Q(created_by=settings.SYSTEM_USER)
+    if ExerciseChoices.EVERYONE in personal_settings.exercise_pool:
+        query |= ~Q(created_by__in=[request.user, settings.SYSTEM_USER])
+
+    lifts = Exercise.objects.filter(query)
 
     return render(
         request,
