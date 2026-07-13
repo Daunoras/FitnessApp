@@ -34,7 +34,7 @@ def chart_view(request):
 def calculate_bodyweight(date):
     exact = Weighting.objects.filter(date=date).first()
     if exact:
-        return exact
+        return exact.weight
 
     previous_record = Weighting.objects.filter(date__lt=date).order_by("-date").first()
     later_record = Weighting.objects.filter(date__gt=date).order_by("date").first()
