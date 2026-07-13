@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'weighting.apps.WeightingConfig',
     'data_charts.apps.DataChartsConfig',
     'personal_settings.apps.PersonalSettingsConfig',
+    'personal_goals.apps.PersonalGoalsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
