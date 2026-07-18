@@ -65,3 +65,8 @@ class BodyweightGoal(Goal):
             progress = current_weight - self.start_bodyweight / self.target_bodyweight - self.start_bodyweight
         return progress
 
+    def __str__(self):
+        description = f"Bodyweight {self.start_bodyweight}-{self.target_bodyweight}"
+        if self.deadline:
+            description += f" to {self.deadline}"
+        return description
