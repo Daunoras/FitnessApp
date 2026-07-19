@@ -1,4 +1,7 @@
+from typing import Iterable
+
 from django.db import models
+from django.db.models.base import ModelBase
 from polymorphic.models import PolymorphicModel
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -64,6 +67,14 @@ class BodyweightGoal(Goal):
         else:
             progress = current_weight - self.start_bodyweight / self.target_bodyweight - self.start_bodyweight
         return progress
+
+    def save(self, *args, **kwargs):
+        if not self.is_weight_loss:
+            if self.start_bodyweight > self.target_bodyweight:
+                self.is_weight_loss = True
+            else:
+                self.is_weight_loss = False
+        super().save(*args, **kwargs)
 
     def __str__(self):
         description = f"Bodyweight {self.start_bodyweight}-{self.target_bodyweight}"

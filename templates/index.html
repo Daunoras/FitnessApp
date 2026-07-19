@@ -12,7 +12,9 @@
   <p id="warning" style="color: red; display:none;"></p>
     {% if goals %}
     {% for goal in goals %}
-        <div>{{ goal }}</div>
+        <div>
+            <a href="{% url 'bodyweight-goal-details' goal.pk %}">{{ goal }}</a>
+        </div>
     {% endfor %}
     {% else %}
         <div>You don't have any active goals set at the moment</div>

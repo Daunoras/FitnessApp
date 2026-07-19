@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Bodyweight goal</h1>
+    <hr>
+    <ul>
+        <li><strong >Beginning: {{object.start_date}}</strong></li>
+          <li><strong >Deadline: {{object.deadline}}</strong></li>
+        <li><strong>Goal status:</strong> {{object.status}}
+            <strong>Starting bodyweight:</strong> {{object.start_bodyweight}}
+            <strong>Target bodyweight:</strong> {{object.target_bodyweight}}
+        </li>
+
+        <div>
+          <a href="{% url 'bodyweight-goal-update' object.id %}" ><button>Update</button></a>
+          <a href="{% url 'bodyweight-goal-delete' object.id %}" ><button id="destroy">Delete</button></a>
+        </div>
+    </ul>
+    <a href="{% url 'personal-goals' %}"><button>To goals</button></a>
+{% endblock %}

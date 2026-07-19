@@ -6,11 +6,11 @@ from .forms import WorkoutCreateForm, SetCreateForm, ExerciseCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
-from personal_goals.models import BodyweightGoal, GoalStatus
+from personal_goals.services import get_user_current_goals
 
 
 def index(request):
-    goals = BodyweightGoal.objects.filter(user=request.user, status=GoalStatus.ACTIVE)
+    goals = get_user_current_goals(request.user)
     context = {'goals': goals}
     return render(request, 'index.html', context=context)
 
