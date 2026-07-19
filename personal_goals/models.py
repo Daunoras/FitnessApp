@@ -1,11 +1,11 @@
 from typing import Iterable
-
 from django.db import models
 from django.db.models.base import ModelBase
 from polymorphic.models import PolymorphicModel
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from weighting.models import Weighting
+from django.urls import reverse
 
 
 class GoalStatus(models.TextChoices):
@@ -32,6 +32,10 @@ class Goal(PolymorphicModel):
                     choices=GoalStatus.choices,
                     default=GoalStatus.INACTIVE
     )
+    detail_url_name = None
+
+    def get_detail_view_url_name(self):
+        return reverse(self.detail_url_name, kwargs={"pk": self.pk})
 
     def clean(self):
         super().clean()
@@ -48,6 +52,7 @@ class BodyweightGoal(Goal):
     target_bodyweight = models.FloatField("Target bodyweight", blank=False, null=False)
     start_bodyweight = models.FloatField("Bodyweight at start", blank=False, null=False)
     is_weight_loss = models.BooleanField("Is the goal for weight loss", blank=False, null=False)
+    detail_url_name = "bodyweight-goal-details"
 
     def complete_goal(self):
         self.status = GoalStatus.COMPLETED

@@ -13,7 +13,7 @@
     {% if goals %}
     {% for goal in goals %}
         <div>
-            <a href="{% url 'bodyweight-goal-details' goal.pk %}">{{ goal }}</a>
+            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
         </div>
     {% endfor %}
     {% else %}

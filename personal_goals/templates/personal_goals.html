@@ -9,7 +9,7 @@
         <span>your current goals:</span>
         {% for goal in current_goals %}
                 <div>
-            <a href="{% url 'bodyweight-goal-details' goal.pk %}">{{ goal }}</a>
+            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
         </div>
         {% endfor %}
     </div>
@@ -26,7 +26,7 @@
         <span>All goals:</span>
         {% for goal in all_goals %}
         <div>
-            <a href="{% url 'bodyweight-goal-details' goal.pk %}">{{ goal }}</a>
+            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
         </div>
         {% endfor %}
     </div>
