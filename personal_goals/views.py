@@ -3,8 +3,8 @@ from django.shortcuts import render
 from .services import get_user_current_goals, get_user_goals
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import BodyweightGoal
-from .forms import BodyweightGoalCreateForm
+from .models import BodyweightGoal, DailyNutritionGoal
+from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm
 from django.urls import reverse_lazy
 
 
@@ -64,6 +64,58 @@ class BodyweightGoalDeleteView(LoginRequiredMixin, DeleteView):
     model = BodyweightGoal
     success_url = reverse_lazy('personal-goals')
     template_name = 'bodyweight_goal_delete.html'
+
+    def test_func(self):
+        goal = self.get_object()
+        return self.request.user == goal.user
+
+
+class DailyNutritionGoalCreateView(LoginRequiredMixin, CreateView):
+    model = DailyNutritionGoal
+    template_name = 'nutrition_goal_add.html'
+    form_class = DailyNutritionGoalCreateForm
+
+    def get_success_url(self):
+        return reverse_lazy('nutrition-goal-details', args=[self.object.pk])
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class DailyNutritionGoalDetailView(LoginRequiredMixin, DetailView):
+    model = DailyNutritionGoal
+    template_name = 'nutrition_goal_details.html'
+
+
+class DailyNutritionGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = DailyNutritionGoal
+    fields = [
+        'start_date',
+        'deadline',
+        'status',
+        'nutrient_type',
+        'amount'
+    ]
+    template_name = 'nutrition_goal_add.html'
+
+    def get_success_url(self):
+        pk = self.object.pk
+        return reverse_lazy('nutrition-goal-details', args=[pk])
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        goal = self.get_object()
+        return self.request.user == goal.user
+
+
+class DailyNutritionGoalDeleteView(LoginRequiredMixin, DeleteView):
+    model = DailyNutritionGoal
+    success_url = reverse_lazy('personal-goals')
+    template_name = 'nutrition_goal_delete.html'
 
     def test_func(self):
         goal = self.get_object()

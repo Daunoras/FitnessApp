@@ -1,9 +1,11 @@
+import datetime
 from typing import Iterable
 from django.db import models
 from django.db.models.base import ModelBase
 from polymorphic.models import PolymorphicModel
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from nutrition.models import DayOfEating
 from weighting.models import Weighting
 from django.urls import reverse
 
@@ -16,6 +18,13 @@ class GoalStatus(models.TextChoices):
     FAILED = "Failed", "failed"
 
 
+class NutrientType(models.TextChoices):
+    CALORIES = "Calories", "calories"
+    PROTEIN = "Protein", "protein"
+    CARBOHYDRATES = "Carbohydrates", "carbohydrates"
+    FATS = "Fats", "fats"
+
+
 class Goal(PolymorphicModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     start_date = models.DateField(
@@ -23,6 +32,7 @@ class Goal(PolymorphicModel):
                     blank=False,
                     null=False,
                     help_text="The date of the goal start")
+    end_date = models.DateField("End date", blank=True, null=True)
     deadline = models.DateField("Deadline", blank=True, null=True)
     status = models.CharField(
         "Status",
@@ -47,15 +57,16 @@ class Goal(PolymorphicModel):
                 )
             })
 
+    def complete_goal(self):
+        self.status = GoalStatus.COMPLETED
+        self.end_date = datetime.date.today()
+
 
 class BodyweightGoal(Goal):
     target_bodyweight = models.FloatField("Target bodyweight", blank=False, null=False)
     start_bodyweight = models.FloatField("Bodyweight at start", blank=False, null=False)
     is_weight_loss = models.BooleanField("Is the goal for weight loss", blank=False, null=False)
     detail_url_name = "bodyweight-goal-details"
-
-    def complete_goal(self):
-        self.status = GoalStatus.COMPLETED
 
     def check_completeness(self):
         current_weight = Weighting.objects.filter(athlete=self.user).order_by("-date").first().weight
@@ -86,3 +97,29 @@ class BodyweightGoal(Goal):
         if self.deadline:
             description += f" to {self.deadline}"
         return description
+
+
+class DailyNutritionGoal(Goal):
+    amount = models.FloatField("Consumed amount", blank=False, null=False)
+    nutrient_type = models.CharField("Nutrient type",
+                                    max_length=14,
+                                    null=False,
+                                    blank=False,
+                                    choices=NutrientType.choices)
+    detail_url_name = "nutrition-goal-details"
+
+    def progress_percentage(self):
+        todays_eating = DayOfEating.objects.filter(
+            athlete=self.user, date=datetime.date.today()
+        ).order_by("-date").first()
+        progress = 0
+        if todays_eating:
+            if self.nutrient_type == NutrientType.CALORIES:
+                progress = todays_eating.kcal / self.amount
+            elif self.nutrient_type == NutrientType.PROTEIN:
+                progress = todays_eating.protein / self.amount
+        return progress
+
+    def __str__(self):
+        return f"Daily {self.nutrient_type} goal {self.amount}"
+
