@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Daily nutrition goal</h1>
+    <hr>
+    <ul>
+        <li><strong>Beginning: {{object.start_date}}</strong></li>
+        <li><strong>Deadline: {{object.deadline}}</strong></li>
+        <li><strong>Goal status:</strong> {{object.status}}
+            <strong>Type:</strong> {{object.nutrient_type}}
+            <strong>Amount:</strong> {{object.amount}}
+        </li>
+
+        <div>
+          <a href="{% url 'nutrition-goal-update' object.id %}" ><button>Update</button></a>
+          <a href="{% url 'nutrition-goal-delete' object.id %}" ><button id="destroy">Delete</button></a>
+        </div>
+    </ul>
+    <a href="{% url 'personal-goals' %}"><button>To goals</button></a>
+{% endblock %}

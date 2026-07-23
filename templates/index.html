@@ -10,16 +10,16 @@
   <h1>FitnessApp</h1>
   <p>Eat, train, sleep, repeat</p>
   <p id="warning" style="color: red; display:none;"></p>
-
-    <div id="nutrition-canvas-container" style="padding: 20px;">
-        <canvas id="nutrition-chart" ></canvas>
-    </div>
-
-    <div id="bodyweight-canvas-container" style="padding: 20px;">
-        <canvas id="weight-chart" ></canvas>
-    </div>
-
-    <div id="tooltip"></div>
+    {% if goals %}
+    {% for goal in goals %}
+        <div>
+            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
+        </div>
+    {% endfor %}
+    {% else %}
+        <div>You don't have any active goals set at the moment</div>
+        <br>
+    {% endif %}
 
     <div id="menu" popover>
         <div id="menu-info"></div>
@@ -31,6 +31,18 @@
     <div id="activity-calendar" class="activity-calendar">
         <div id="calendar-grid" class="calendar-grid"></div>
     </div>
+
+    <div id="charts">
+        <div id="nutrition-canvas-container" style="padding: 20px;">
+            <canvas id="nutrition-chart" ></canvas>
+        </div>
+
+        <div id="bodyweight-canvas-container" style="padding: 20px;">
+            <canvas id="weight-chart" ></canvas>
+        </div>
+    </div>
+
+    <div id="tooltip"></div>
 
     <script type="module" src="{% static 'js/dashboard_chart_controller.js' %}"></script>
     <script type="module" src="{% static 'js/dashboard_calendar_controller.js' %}"></script>

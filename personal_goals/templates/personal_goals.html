@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+    <h1>Personal goals</h1>
+
+    {% if current_goals %}
+    <div id="current-goals">
+        <span>your current goals:</span>
+        {% for goal in current_goals %}
+                <div>
+            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div id="no-current-goals">
+        <span>You don't have any goals at the time</span>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'bodyweight-goal-add' %}">Add a new bodyweight goal</a>
+    <a href="{% url 'nutrition-goal-add' %}">Add a new daily nutrition goal</a>
+    <a href="{% url 'lifting-goal-add' %}">Add a new lifting goal</a>
+
+    {% if all_goals %}
+    <div id="all-goals">
+        <span>All goals:</span>
+        {% for goal in all_goals %}
+        <div>
+            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+{% endblock %}

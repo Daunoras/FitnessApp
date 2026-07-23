@@ -1,21 +1,38 @@
 
-#canvas-container {
+#charts {
     width: 95%;
     height: 95%;
     box-sizing: border-box;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 #nutrition-canvas-container {
     width: 40%;
     height: 40%;
     box-sizing: border-box;
+    flex: 1;
+    flex: 1 1 400px;
 }
 
+#nutrition-canvas-container canvas {
+    width: 100% !important;
+    height: auto !important;
+}
 
 #bodyweight-canvas-container {
     width: 40%;
     height: 40%;
     box-sizing: border-box;
+    flex: 1;
+    flex: 1 1 400px;
+}
+
+#bodyweight-canvas-container canvas {
+    width: 100% !important;
+    height: auto !important;
 }
 
 #statisticsDataChart, #nutrition-chart, #weight-chart {
