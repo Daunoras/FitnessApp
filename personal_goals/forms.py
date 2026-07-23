@@ -1,5 +1,5 @@
 from django import forms
-from .models import BodyweightGoal, DailyNutritionGoal
+from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
 
 
 class BodyweightGoalCreateForm(forms.ModelForm):
@@ -24,5 +24,20 @@ class DailyNutritionGoalCreateForm(forms.ModelForm):
                 'status',
                 'nutrient_type',
                 'amount'
+        ]
+        widgets = {'user': forms.HiddenInput()}
+
+
+class LiftingGoalCreateForm(forms.ModelForm):
+    class Meta:
+        model = LiftingGoal
+        fields = [
+            'start_date',
+            'deadline',
+            'status',
+            'exercise',
+            'weight',
+            'reps',
+            'is_estimated'
         ]
         widgets = {'user': forms.HiddenInput()}

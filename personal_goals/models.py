@@ -5,6 +5,8 @@ from django.db.models.base import ModelBase
 from polymorphic.models import PolymorphicModel
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+
+from fitness.models import Exercise
 from nutrition.models import DayOfEating
 from weighting.models import Weighting
 from django.urls import reverse
@@ -122,4 +124,15 @@ class DailyNutritionGoal(Goal):
 
     def __str__(self):
         return f"Daily {self.nutrient_type} goal {self.amount}"
+
+
+class LiftingGoal(Goal):
+    weight = models.FloatField("Weight", blank=False, null=False)
+    reps = models.IntegerField("Reps", blank=False, null=False)
+    exercise = models.ForeignKey(Exercise, on_delete=models.SET_NULL, blank=True, null=True)
+    is_estimated = models.BooleanField("Estimated", blank=False, null=False)
+    detail_url_name = "lifting-goal-details"
+
+    def __str__(self):
+        return f"{self.exercise} {self.weight}kg for {self.reps} reps"
 

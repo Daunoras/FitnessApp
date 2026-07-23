@@ -3,8 +3,8 @@ from django.shortcuts import render
 from .services import get_user_current_goals, get_user_goals
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import BodyweightGoal, DailyNutritionGoal
-from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm
+from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
+from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm, LiftingGoalCreateForm
 from django.urls import reverse_lazy
 
 
@@ -131,4 +131,64 @@ class DailyNutritionGoalDeleteView(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Do you really want to delete the goal for your daily nutrition?"
         context["cancel_url"] = reverse_lazy('nutrition-goal-details', args=[self.object.pk])
+        return context
+
+
+class LiftingGoalCreateView(LoginRequiredMixin, CreateView):
+    model = LiftingGoal
+    template_name = 'lifting_goal_add.html'
+    form_class = LiftingGoalCreateForm
+
+    def get_success_url(self):
+        return reverse_lazy('lifting-goal-details', args=[self.object.pk])
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class LiftingGoalDetailView(LoginRequiredMixin, DetailView):
+    model = LiftingGoal
+    template_name = 'lifting_goal_details.html'
+
+
+class LiftingGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = LiftingGoal
+    fields = [
+            'start_date',
+            'deadline',
+            'status',
+            'exercise',
+            'weight',
+            'reps',
+            'is_estimated'
+    ]
+    template_name = 'lifting_goal_add.html'
+
+    def get_success_url(self):
+        pk = self.object.pk
+        return reverse_lazy('lifting-goal-details', args=[pk])
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        goal = self.get_object()
+        return self.request.user == goal.user
+
+
+class LiftingGoalDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = LiftingGoal
+    success_url = reverse_lazy('personal-goals')
+    template_name = 'goal_delete.html'
+
+    def test_func(self):
+        goal = self.get_object()
+        return self.request.user == goal.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Do you really want to delete your lifting goal?"
+        context["cancel_url"] = reverse_lazy('lifting-goal-details', args=[self.object.pk])
         return context

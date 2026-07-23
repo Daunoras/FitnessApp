@@ -12,4 +12,8 @@ urlpatterns = [
      path('nutrition/<int:pk>', views.DailyNutritionGoalDetailView.as_view(), name='nutrition-goal-details'),
      path('nutrition/<int:pk>/update', views.DailyNutritionGoalUpdateView.as_view(), name='nutrition-goal-update'),
      path('nutrition/<int:pk>/delete', views.DailyNutritionGoalDeleteView.as_view(), name='nutrition-goal-delete'),
+     path('lifting/add', views.LiftingGoalCreateView.as_view(), name='lifting-goal-add'),
+     path('lifting/<int:pk>', views.LiftingGoalDetailView.as_view(), name='lifting-goal-details'),
+     path('lifting/<int:pk>/update', views.LiftingGoalUpdateView.as_view(), name='lifting-goal-update'),
+     path('lifting/<int:pk>/delete', views.LiftingGoalDeleteView.as_view(), name='lifting-goal-delete'),
 ]
