@@ -1,5 +1,6 @@
 import Chart from './canvas_chart.js';
 
+
 async function fetchChartData(model, startDate, endDate, lift) {
     if (!validateDates(startDate, endDate)) {
         return null;
@@ -44,5 +45,6 @@ function validateDates(startDate, endDate) {
     warning.style.display = "none";
     return true;
 }
+
 
 export { fetchChartData, loadChart, validateDates };

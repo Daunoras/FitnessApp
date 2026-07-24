@@ -89,7 +89,7 @@ def get_calendar_data(request):
         elif current_day > today:
             is_future = True
 
-        workout_add_url = f"workouts/add/?date={current_day.isoformat()}"
+        workout_add_url = f"/fitness/workouts/add/?date={current_day.isoformat()}"
         nutrition_add_url = f"/nutrition/add?date={current_day.isoformat()}"
         weighting_add_url = f"/weighting/add?date={current_day.isoformat()}"
 

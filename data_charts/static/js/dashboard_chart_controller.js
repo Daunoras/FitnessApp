@@ -5,6 +5,7 @@ import { findPoint, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
 
 let nutritionChart = null;
 let weightChart = null;
+
 document.addEventListener('DOMContentLoaded', async function() {
     const nutritionCanvas = document.getElementById('nutrition-chart');
     const weightCanvas = document.getElementById('weight-chart');

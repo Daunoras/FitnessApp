@@ -4,6 +4,7 @@ import { findPoint, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
 
 
 let dataChart = null;
+
 document.addEventListener('DOMContentLoaded', async function() {
     const modelSelector = document.getElementById('dataSelector');
     const dateFrom = document.getElementById('date_from');
