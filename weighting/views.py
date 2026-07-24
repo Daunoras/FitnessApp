@@ -16,7 +16,7 @@ class WeightingListView(LoginRequiredMixin, ListView):
 class WeightingCreateView(LoginRequiredMixin, CreateView):
     model = Weighting
     success_url = reverse_lazy('weighting')
-    template_name = 'weighting_add.html'
+    template_name = 'add_record.html'
     form_class = WeightingCreateForm
 
     def form_valid(self, form):
@@ -26,22 +26,22 @@ class WeightingCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'create'
+        context["page_title"] = "Add your bodyweight on the given day"
+        context["cancel_url"] = reverse_lazy('weighting')
         return context
 
     def get_initial(self):
         initial = super().get_initial()
-
         date = self.request.GET.get("date")
         if date:
             initial["date"] = date
-
         return initial
 
 
 class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Weighting
     fields = ['weight', 'date']
-    template_name = 'weighting_add.html'
+    template_name = 'add_record.html'
     success_url = reverse_lazy('weighting')
 
     def form_valid(self, form):
@@ -55,6 +55,9 @@ class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'update'
+        context["page_title"] = f"{self.object}"
+        context["delete_url"] = reverse_lazy('weighting-delete', args=[self.object.pk])
+        context["cancel_url"] = reverse_lazy('weighting')
         return context
 
 

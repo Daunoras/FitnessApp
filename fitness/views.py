@@ -63,7 +63,7 @@ class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
 
 class WorkoutCreateView(LoginRequiredMixin, CreateView):
     model = Workout
-    template_name = 'workout_add.html'
+    template_name = 'add_record.html'
     form_class = WorkoutCreateForm
 
     def get_success_url(self):
@@ -75,22 +75,25 @@ class WorkoutCreateView(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-
         date = self.request.GET.get("date")
         if date:
             initial["date"] = date
-
         return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Add workout information"
+        context["cancel_url"] = reverse_lazy('workouts')
+        return context
 
 
 class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Workout
     fields = ['date', 'duration', 'type']
-    template_name = 'workout_add.html'
+    template_name = 'add_record.html'
 
     def get_success_url(self):
-        pk = self.object.pk
-        return reverse_lazy('workout-details', args=[pk])
+        return reverse_lazy('workout-details', args=[self.object.pk])
 
     def form_valid(self, form):
         form.instance.athlete = self.request.user
@@ -99,6 +102,14 @@ class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         workout = self.get_object()
         return self.request.user == workout.athlete
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'update'
+        context["page_title"] = f"{self.object}"
+        context["delete_url"] = reverse_lazy('workout-delete', args=[self.object.pk])
+        context["cancel_url"] = reverse_lazy('workout-details', args=[self.object.pk])
+        return context
 
 
 class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -112,11 +123,7 @@ class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        page_title = f"Do you really want to delete {self.object.date}"
-        if self.object.type:
-            page_title += f" {self.object.type}?"
-        else:
-            page_title += " workout?"
+        page_title = f"Do you really want to delete {self.object}?"
         context["page_title"] = page_title
         context["cancel_url"] = reverse_lazy('workout-details', args=[self.object.pk])
         return context
@@ -150,7 +157,7 @@ def duplicate_set(request, pk):
 
 class ExerciseCreateView(LoginRequiredMixin, CreateView):
     model = Exercise
-    template_name = 'exercise_add.html'
+    template_name = 'add_record.html'
     form_class = ExerciseCreateForm
 
     def get_success_url(self):
@@ -159,6 +166,12 @@ class ExerciseCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Add a custom exercise"
+        context["cancel_url"] = reverse_lazy('exercises')
+        return context
 
 
 class ExerciseListView(LoginRequiredMixin, ListView):
@@ -176,7 +189,7 @@ class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
               'target_muscle',
               'equipment',
               'uses_bodyweight']
-    template_name = 'exercise_add.html'
+    template_name = 'add_record.html'
 
     def get_success_url(self):
         return reverse_lazy('exercises')
@@ -192,6 +205,9 @@ class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['action'] = 'update'
+        context["page_title"] = f"{self.object.name}"
+        context["delete_url"] = reverse_lazy('exercise-delete', args=[self.object.pk])
+        context["cancel_url"] = reverse_lazy('exercises')
         return context
 
 
