@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
+
+
+admin.site.register(BodyweightGoal)
+admin.site.register(DailyNutritionGoal)
+admin.site.register(LiftingGoal)

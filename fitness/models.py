@@ -1,6 +1,7 @@
-from django.db import models
 from datetime import date
+
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Muscle(models.Model):
@@ -48,7 +49,12 @@ class Workout(models.Model):
     type = models.ForeignKey(WorkoutType, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.date} - {self.type}"
+        workout_title = f"{self.date}"
+        if self.type:
+            workout_title += f" {self.type}"
+        else:
+            workout_title += " workout"
+        return workout_title
 
 
 class Set(models.Model):

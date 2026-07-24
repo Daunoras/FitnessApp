@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import UpdateView
-from .models import PersonalSettings
-from .forms import PersonalSettingsForm
 from django.urls import reverse_lazy
+from django.views.generic import UpdateView
+
+from .forms import PersonalSettingsForm
+from .models import PersonalSettings
 from .services import get_personal_settings
 
 

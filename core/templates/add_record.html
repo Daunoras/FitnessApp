@@ -5,15 +5,16 @@
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
-            <h1>Add a goal for your bodyweight</h1>
+            <h1>{{ page_title }}</h1>
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">
             <button type="submit">Save</button>
         </div>
     </form>
-    {% if action == 'update' %}
-        <a href="{% url 'bodyweight-goal-delete' object.id %}" ><button id="destroy">Delete</button></a>
-    {% endif %}
+        {% if action == 'update' %}
+            <a href="{{ delete_url }}"><button id="destroy">Delete</button></a>
+        {% endif %}
+        <a href="{{ cancel_url }}"><button id="cancel">Cancel</button></a>
     </div>
 {% endblock content %}

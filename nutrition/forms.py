@@ -1,11 +1,14 @@
 from django import forms
+
 from .models import DayOfEating
 
 class DayOfEatingCreateForm(forms.ModelForm):
     class Meta:
         model = DayOfEating
         fields = ['kcal', 'protein', 'date']
-        widgets = {'athlete': forms.HiddenInput()}
+        widgets = {
+            'athlete': forms.HiddenInput()
+        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

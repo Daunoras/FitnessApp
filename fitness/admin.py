@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Muscle, Equipment, Exercise, Workout, WorkoutType, Set
 
 

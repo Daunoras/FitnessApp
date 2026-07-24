@@ -2,17 +2,20 @@
 
 {% block content %}
     <h1>Nutrition</h1>
-
-     <a href="{% url 'nutrition-add' %}"><button>ADD</button></a>
+    <a href="{% url 'nutrition-add' %}">
+        <button>ADD</button>
+    </a>
 
     {% if dayofeating_list %}
-    <ul>
+      <ul>
         {% for day in dayofeating_list %}
             <li id="days">
-            <a  href="{% url 'nutrition-details' day.pk %}">{{ day|stringformat:'r' }} </a>
+              <a href="{% url 'nutrition-details' day.pk %}">
+                  {{ day|stringformat:'r' }}
+              </a>
             </li>
         {% endfor %}
-    </ul>
+      </ul>
 
     {% else %}
       <p>You have not recorded your nutrition yet.</p>

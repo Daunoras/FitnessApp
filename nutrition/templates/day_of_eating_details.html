@@ -7,8 +7,8 @@
         <li><strong >Date: {{object.date}}</strong></li>
         <li><strong>Calories:</strong> {{object.kcal}}
             <strong>Protein:</strong> {{object.protein}}
-
         </li>
+
         <form method="post">
             {% csrf_token %}
             <input type="number" name="calories">
@@ -16,12 +16,17 @@
             <input type="number" name="protein">
             <button type="submit" name="action" value="Add protein">Add protein</button>
         </form>
-
-                <br/>
+        <br/>
         <div>
-          <a href="{% url 'nutrition-update' object.id %}" ><button>Update</button></a>
-          <a href="{% url 'nutrition-delete' object.id %}" ><button id="destroy">Delete</button></a>
+          <a href="{% url 'nutrition-update' object.id %}">
+              <button>Update</button>
+          </a>
+          <a href="{% url 'nutrition-delete' object.id %}">
+              <button id="destroy">Delete</button>
+          </a>
         </div>
     </ul>
-    <a href="{% url 'nutrition' %}"><button>Go back</button></a>
+    <a href="{% url 'nutrition' %}">
+        <button>Go back</button>
+    </a>
 {% endblock %}

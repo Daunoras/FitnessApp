@@ -1,24 +1,18 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-q)v8vlz-vm$cxdb+762@lxp=uq3^+kcu(sncv!2u0xmup)4i$s'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'crispy_forms',
-    'crispy_bootstrap4',
-    'fitness.apps.FitnessConfig',
-    'users.apps.UsersConfig',
-    'nutrition.apps.NutritionConfig',
-    'weighting.apps.WeightingConfig',
-    'data_charts.apps.DataChartsConfig',
-    'personal_settings.apps.PersonalSettingsConfig',
-    'personal_goals.apps.PersonalGoalsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,6 +25,16 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'fitness.apps.FitnessConfig',
+    'users.apps.UsersConfig',
+    'nutrition.apps.NutritionConfig',
+    'weighting.apps.WeightingConfig',
+    'data_charts.apps.DataChartsConfig',
+    'personal_settings.apps.PersonalSettingsConfig',
+    'personal_goals.apps.PersonalGoalsConfig',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -116,12 +120,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_POST = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'justdaunoras@gmail.com'
-EMAIL_HOST_PASSWORD = 'mmsm thlo doak wpky'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-SYSTEM_USER = 1
+SYSTEM_USER = os.getenv('SYSTEM_USER')

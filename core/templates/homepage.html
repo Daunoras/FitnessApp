@@ -2,20 +2,21 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'data_charts/css/charts.css' %}">
-<link rel="stylesheet" href="{% static 'data_charts/css/calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'data_charts/css/charts.css' %}">
+    <link rel="stylesheet" href="{% static 'data_charts/css/calendar.css' %}">
 {% endblock %}
 
 {% block content %}
   <h1>FitnessApp</h1>
   <p>Eat, train, sleep, repeat</p>
   <p id="warning" style="color: red; display:none;"></p>
+  {% if user.is_authenticated %}
     {% if goals %}
-    {% for goal in goals %}
-        <div>
-            <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
-        </div>
-    {% endfor %}
+        {% for goal in goals %}
+            <div>
+                <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
+            </div>
+        {% endfor %}
     {% else %}
         <div>You don't have any active goals set at the moment</div>
         <br>
@@ -46,5 +47,5 @@
 
     <script type="module" src="{% static 'js/dashboard_chart_controller.js' %}"></script>
     <script type="module" src="{% static 'js/dashboard_calendar_controller.js' %}"></script>
-
+  {% endif %}
 {% endblock %}
