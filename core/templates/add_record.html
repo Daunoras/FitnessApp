@@ -12,9 +12,9 @@
             <button type="submit">Save</button>
         </div>
     </form>
-    {% if action == 'update' %}
-        <a href="{{ delete_url }}"><button id="destroy">Delete</button></a>
-    {% endif %}
+        {% if action == 'update' %}
+            <a href="{{ delete_url }}"><button id="destroy">Delete</button></a>
+        {% endif %}
         <a href="{{ cancel_url }}"><button id="cancel">Cancel</button></a>
     </div>
 {% endblock content %}

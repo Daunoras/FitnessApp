@@ -2,11 +2,10 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'data_charts/css/charts.css' %}">
+    <link rel="stylesheet" href="{% static 'data_charts/css/charts.css' %}">
 {% endblock %}
 
 {% block content %}
-
     <h1>Select Data to Display</h1>
     <select id="dataSelector">
         <option value="nutrition">Nutrition Data</option>
@@ -18,19 +17,18 @@
             <option value="{{ lift.id }}">
                 {{ lift.name }}
             </option>
-
         {% endfor %}
     </select>
     <h2>Select time period</h2>
-        <p id="warning" style="color: red; display:none;"></p>
-        <label>
-            From:
-            <input type="date" id="date_from">
-        </label>
-        <label>
-            To:
-            <input type="date" id="date_to">
-        </label>
+    <p id="warning" style="color: red; display:none;"></p>
+    <label>
+        From:
+        <input type="date" id="date_from">
+    </label>
+    <label>
+        To:
+        <input type="date" id="date_to">
+    </label>
     <br>
 
     <div id="canvas-container" style="padding: 20px;">

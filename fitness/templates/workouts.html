@@ -2,19 +2,24 @@
 
 {% block content %}
     <h1>Workouts</h1>
+    <a href="{% url 'workout-add' %}">
+        <button>ADD A WORKOUT</button>
+    </a>
 
-     <a href="{% url 'workout-add' %}"><button>ADD A WORKOUT</button></a>
-
-    <a href="{% url 'exercises' %}"><button>My custom exercises</button></a>
+    <a href="{% url 'exercises' %}">
+        <button>My custom exercises</button>
+    </a>
 
     {% if workout_list %}
-    <ul>
+      <ul>
         {% for workout in workout_list %}
             <li id="days">
-            <a  href="{% url 'workout-details' workout.pk %}">{{ workout|stringformat:'s' }} </a>
+              <a href="{% url 'workout-details' workout.pk %}">
+                  {{ workout|stringformat:'s' }}
+              </a>
             </li>
         {% endfor %}
-    </ul>
+      </ul>
 
     {% else %}
       <p>You have not recorded your training yet.</p>

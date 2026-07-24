@@ -7,29 +7,32 @@
         <li><strong >Date: {{object.date}}</strong></li>
         <li><strong>Duration:</strong> {{object.duration}}
             <strong>Workout type:</strong> {{object.type}}
-
         </li>
 
         <div>
-          <a href="{% url 'workout-update' object.id %}" ><button>Update</button></a>
-          <a href="{% url 'workout-delete' object.id %}" ><button id="destroy">Delete</button></a>
+          <a href="{% url 'workout-update' object.id %}">
+              <button>Update</button>
+          </a>
+          <a href="{% url 'workout-delete' object.id %}">
+              <button id="destroy">Delete</button>
+          </a>
         </div>
     </ul>
 
     <ul>
-    {% for set in workout.set_set.all %}
+      {% for set in workout.set_set.all %}
         <li>
             {{ set }}
-                <form method="post" action="{% url 'set-delete' set.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit">-</button>
-                </form>
-                <form action="{% url 'set-duplicate' set.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit">copy</button>
-                </form>
+            <form method="post" action="{% url 'set-delete' set.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">-</button>
+            </form>
+            <form action="{% url 'set-duplicate' set.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">copy</button>
+            </form>
         </li>
-    {% endfor %}
+      {% endfor %}
     </ul>
 
     <form method="POST" action="" enctype="multipart/form-data">
@@ -42,5 +45,7 @@
         </div>
     </form>
 
-    <a href="{% url 'workouts' %}"><button>Go back</button></a>
+    <a href="{% url 'workouts' %}">
+        <button>Go back</button>
+    </a>
 {% endblock %}

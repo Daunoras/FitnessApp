@@ -4,18 +4,29 @@
     <h1>Lifting goal</h1>
     <hr>
     <ul>
-        <li><strong>Beginning: {{object.start_date}}</strong></li>
-        <li><strong>Deadline: {{object.deadline}}</strong></li>
-        <li><strong>Goal status:</strong> {{object.status}}
+        <li>
+            <strong>Beginning: {{object.start_date}}</strong>
+        </li>
+        <li>
+            <strong>Deadline: {{object.deadline}}</strong>
+        </li>
+        <li>
+            <strong>Goal status:</strong> {{object.status}}
             <strong>Exercise:</strong> {{object.exercise}}
             <strong>Weight:</strong> {{object.weight}}
             <strong>Reps:</strong> {{object.reps}}
         </li>
 
         <div>
-          <a href="{% url 'lifting-goal-update' object.id %}" ><button>Update</button></a>
-          <a href="{% url 'lifting-goal-delete' object.id %}" ><button id="destroy">Delete</button></a>
+          <a href="{% url 'lifting-goal-update' object.id %}">
+              <button>Update</button>
+          </a>
+          <a href="{% url 'lifting-goal-delete' object.id %}">
+              <button id="destroy">Delete</button>
+          </a>
         </div>
     </ul>
-    <a href="{% url 'personal-goals' %}"><button>To goals</button></a>
+    <a href="{% url 'personal-goals' %}">
+        <button>To goals</button>
+    </a>
 {% endblock %}

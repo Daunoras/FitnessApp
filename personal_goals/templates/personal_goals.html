@@ -19,19 +19,25 @@
     </div>
     {% endif %}
 
-    <a href="{% url 'bodyweight-goal-add' %}">Add a new bodyweight goal</a>
-    <a href="{% url 'nutrition-goal-add' %}">Add a new daily nutrition goal</a>
-    <a href="{% url 'lifting-goal-add' %}">Add a new lifting goal</a>
+    <a href="{% url 'bodyweight-goal-add' %}">
+        <button>Add a new bodyweight goal</button>
+    </a>
+    <a href="{% url 'nutrition-goal-add' %}">
+        <button>Add a new daily nutrition goal</button>
+    </a>
+    <a href="{% url 'lifting-goal-add' %}">
+        <button>Add a new lifting goal</button>
+    </a>
 
     {% if all_goals %}
-    <div id="all-goals">
+      <div id="all-goals">
         <span>All goals:</span>
         {% for goal in all_goals %}
-        <div>
+          <div>
             <a href="{{ goal.get_detail_view_url_name }}">{{ goal }}</a>
-        </div>
+          </div>
         {% endfor %}
-    </div>
+      </div>
     {% endif %}
 
 {% endblock %}
