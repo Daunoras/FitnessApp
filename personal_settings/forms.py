@@ -1,12 +1,13 @@
 from django import forms
+
 from .models import ExerciseChoices, PersonalSettings
 
 
 class PersonalSettingsForm(forms.ModelForm):
     exercise_pool = forms.MultipleChoiceField(
-                choices=ExerciseChoices.choices,
-                widget=forms.CheckboxSelectMultiple,
-                required=False
+        choices=ExerciseChoices.choices,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
 
     class Meta:

@@ -9,6 +9,7 @@ from .models import Weighting
 class WeightingListView(LoginRequiredMixin, ListView):
     model = Weighting
     template_name = 'weighting.html'
+
     def get_queryset(self):
         return Weighting.objects.filter(athlete=self.request.user).order_by('-date')
 

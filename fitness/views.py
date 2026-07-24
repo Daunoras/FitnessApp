@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Workout, Set, Exercise
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import WorkoutCreateForm, SetCreateForm, ExerciseCreateForm
-from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.edit import FormMixin
+
+from .forms import ExerciseCreateForm, SetCreateForm, WorkoutCreateForm
+from .models import Exercise, Set, Workout
 
 
 class WorkoutListView(LoginRequiredMixin, ListView):

@@ -13,7 +13,9 @@ class BodyweightGoalCreateForm(forms.ModelForm):
               'target_bodyweight',
               'start_bodyweight'
         ]
-        widgets = {'user': forms.HiddenInput()}
+        widgets = {
+            'user': forms.HiddenInput()
+        }
 
 
 class DailyNutritionGoalCreateForm(forms.ModelForm):
@@ -26,7 +28,9 @@ class DailyNutritionGoalCreateForm(forms.ModelForm):
                 'nutrient_type',
                 'amount'
         ]
-        widgets = {'user': forms.HiddenInput()}
+        widgets = {
+            'user': forms.HiddenInput()
+        }
 
 
 class LiftingGoalCreateForm(forms.ModelForm):
@@ -41,4 +45,6 @@ class LiftingGoalCreateForm(forms.ModelForm):
             'reps',
             'is_estimated'
         ]
-        widgets = {'user': forms.HiddenInput()}
+        widgets = {
+            'user': forms.HiddenInput()
+        }

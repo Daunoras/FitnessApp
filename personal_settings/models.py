@@ -10,7 +10,11 @@ class ExerciseChoices(models.TextChoices):
 
 
 class PersonalSettings(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="settings")
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="settings"
+    )
     exercise_pool = models.JSONField(default=list)
 
     def clean(self):

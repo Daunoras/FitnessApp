@@ -30,18 +30,19 @@ class Goal(PolymorphicModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     start_date = models.DateField(
         "Starting date",
-                    blank=False,
-                    null=False,
-                    help_text="The date of the goal start")
+        blank=False,
+        null=False,
+        help_text="The date of the goal start"
+    )
     end_date = models.DateField("End date", blank=True, null=True)
     deadline = models.DateField("Deadline", blank=True, null=True)
     status = models.CharField(
         "Status",
-                    max_length=10,
-                    null=False,
-                    blank=False,
-                    choices=GoalStatus.choices,
-                    default=GoalStatus.INACTIVE
+        max_length=10,
+        null=False,
+        blank=False,
+        choices=GoalStatus.choices,
+        default=GoalStatus.INACTIVE
     )
     detail_url_name = None
 
@@ -102,11 +103,13 @@ class BodyweightGoal(Goal):
 
 class DailyNutritionGoal(Goal):
     amount = models.FloatField("Consumed amount", blank=False, null=False)
-    nutrient_type = models.CharField("Nutrient type",
-                                    max_length=14,
-                                    null=False,
-                                    blank=False,
-                                    choices=NutrientType.choices)
+    nutrient_type = models.CharField(
+        "Nutrient type",
+        max_length=14,
+        null=False,
+        blank=False,
+        choices=NutrientType.choices
+    )
     detail_url_name = "nutrition-goal-details"
 
     def progress_percentage(self):
@@ -134,4 +137,3 @@ class LiftingGoal(Goal):
 
     def __str__(self):
         return f"{self.exercise} {self.weight}kg for {self.reps} reps"
-

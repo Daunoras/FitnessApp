@@ -33,11 +33,11 @@ def get_exercise_chart_data(user, lift, date_from, date_to):
     if date_to:
         exercise_data = exercise_data.filter(workout__date__lte=date_to)
     maxes = {}
-    for set in exercise_data:
-        date = set.workout.date
-        max = calculate_lift_max(set.weight, set.reps, set.exercise, date)
-        if (date in maxes and max > maxes[date]) or date not in maxes:
-            maxes[date] = max
+    for set_ in exercise_data:
+        date = set_.workout.date
+        max_ = calculate_lift_max(set_.weight, set_.reps, set_.exercise, date)
+        if (date in maxes and max_ > maxes[date]) or date not in maxes:
+            maxes[date] = max_
     labels = []
     data = []
     for key in maxes:

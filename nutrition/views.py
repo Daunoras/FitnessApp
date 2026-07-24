@@ -1,8 +1,9 @@
-from .models import DayOfEating
-from .forms import DayOfEatingCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+
+from .forms import DayOfEatingCreateForm
+from .models import DayOfEating
 
 
 class DaysOfEatingListView(LoginRequiredMixin, ListView):
