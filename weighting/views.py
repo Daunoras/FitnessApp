@@ -1,8 +1,9 @@
-from .models import Weighting
-from .forms import WeightingCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
+from .forms import WeightingCreateForm
+from .models import Weighting
 
 
 class WeightingListView(LoginRequiredMixin, ListView):

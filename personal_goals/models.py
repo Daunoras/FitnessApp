@@ -1,15 +1,14 @@
 import datetime
-from typing import Iterable
-from django.db import models
-from django.db.models.base import ModelBase
-from polymorphic.models import PolymorphicModel
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.urls import reverse
+from polymorphic.models import PolymorphicModel
 
 from fitness.models import Exercise
 from nutrition.models import DayOfEating
 from weighting.models import Weighting
-from django.urls import reverse
 
 
 class GoalStatus(models.TextChoices):

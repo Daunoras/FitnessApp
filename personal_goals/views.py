@@ -1,11 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
-from .services import get_user_current_goals, get_user_goals
-from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
-from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm, LiftingGoalCreateForm
 from django.urls import reverse_lazy
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+
+from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm, LiftingGoalCreateForm
+from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
+from .services import get_user_current_goals, get_user_goals
 
 
 def personal_goals_view(request):
