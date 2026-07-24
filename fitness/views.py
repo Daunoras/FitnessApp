@@ -6,13 +6,6 @@ from .forms import WorkoutCreateForm, SetCreateForm, ExerciseCreateForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
-from personal_goals.services import get_user_current_goals
-
-
-def index(request):
-    goals = get_user_current_goals(request.user)
-    context = {'goals': goals}
-    return render(request, 'index.html', context=context)
 
 
 class WorkoutListView(LoginRequiredMixin, ListView):
@@ -27,7 +20,6 @@ class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
     model = Workout
     template_name = 'workout_details.html'
     form_class = SetCreateForm
-    # context_object_name = 'workout'
 
     def get_success_url(self):
         return reverse_lazy('workout-details', kwargs={'pk': self.kwargs['pk']})

@@ -1,6 +1,6 @@
 import Chart from './canvas_chart.js';
 
- async function fetchChartData(model, startDate, endDate, lift) {
+async function fetchChartData(model, startDate, endDate, lift) {
     if (!validateDates(startDate, endDate)) {
         return null;
     }

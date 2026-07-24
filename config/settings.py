@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,15 +13,6 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'crispy_forms',
-    'crispy_bootstrap4',
-    'fitness.apps.FitnessConfig',
-    'users.apps.UsersConfig',
-    'nutrition.apps.NutritionConfig',
-    'weighting.apps.WeightingConfig',
-    'data_charts.apps.DataChartsConfig',
-    'personal_settings.apps.PersonalSettingsConfig',
-    'personal_goals.apps.PersonalGoalsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,6 +25,16 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'fitness.apps.FitnessConfig',
+    'users.apps.UsersConfig',
+    'nutrition.apps.NutritionConfig',
+    'weighting.apps.WeightingConfig',
+    'data_charts.apps.DataChartsConfig',
+    'personal_settings.apps.PersonalSettingsConfig',
+    'personal_goals.apps.PersonalGoalsConfig',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [

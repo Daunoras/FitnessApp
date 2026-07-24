@@ -10,6 +10,7 @@
   <h1>FitnessApp</h1>
   <p>Eat, train, sleep, repeat</p>
   <p id="warning" style="color: red; display:none;"></p>
+{% if user.is_authenticated %}
     {% if goals %}
     {% for goal in goals %}
         <div>
@@ -46,5 +47,6 @@
 
     <script type="module" src="{% static 'js/dashboard_chart_controller.js' %}"></script>
     <script type="module" src="{% static 'js/dashboard_calendar_controller.js' %}"></script>
+{% endif %}
 
 {% endblock %}
