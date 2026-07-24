@@ -104,11 +104,22 @@ class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Workout
     success_url = reverse_lazy('workouts')
-    template_name = 'workout_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         workout = self.get_object()
         return self.request.user == workout.athlete
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_title = f"Do you really want to delete {self.object.date}"
+        if self.object.type:
+            page_title += f" {self.object.type}?"
+        else:
+            page_title += " workout?"
+        context["page_title"] = page_title
+        context["cancel_url"] = reverse_lazy('workout-details', args=[self.object.pk])
+        return context
 
 
 class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -143,7 +154,7 @@ class ExerciseCreateView(LoginRequiredMixin, CreateView):
     form_class = ExerciseCreateForm
 
     def get_success_url(self):
-        return reverse_lazy('workouts')
+        return reverse_lazy('exercises')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -187,8 +198,14 @@ class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class ExerciseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Exercise
     success_url = reverse_lazy('exercises')
-    template_name = 'exercise_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         exercise = self.get_object()
         return self.request.user == exercise.created_by
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"Do you really want to delete {self.object.name}?"
+        context["cancel_url"] = reverse_lazy('exercise-update', args=[self.object.pk])
+        return context

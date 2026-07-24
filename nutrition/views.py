@@ -37,9 +37,11 @@ class DayOfEatingDetailView(LoginRequiredMixin, DetailView):
 
 class DayOfEatingCreateView(LoginRequiredMixin, CreateView):
     model = DayOfEating
-    success_url = reverse_lazy('nutrition')
     template_name = 'nutrition_add.html'
     form_class = DayOfEatingCreateForm
+
+    def get_success_url(self):
+        return reverse_lazy('nutrition-details', kwargs={'pk': self.object.pk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -79,8 +81,15 @@ class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
 class DayOfEatingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = DayOfEating
     success_url = reverse_lazy('nutrition')
-    template_name = 'nutrition_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         day = self.get_object()
         return self.request.user == day.athlete
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"Do you really want to delete {self.object.date}?"
+        context["cancel_url"] = reverse_lazy('nutrition-details', args=[self.object.pk])
+        return context
+

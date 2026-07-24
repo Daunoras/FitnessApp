@@ -61,8 +61,14 @@ class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class WeightingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Weighting
     success_url = reverse_lazy('weighting')
-    template_name = 'weighting_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         day = self.get_object()
         return self.request.user == day.athlete
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"Do you really want to delete {self.object.date}?"
+        context["cancel_url"] = reverse_lazy('weighting')
+        return context

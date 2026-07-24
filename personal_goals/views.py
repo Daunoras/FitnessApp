@@ -63,7 +63,7 @@ class BodyweightGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateVi
 class BodyweightGoalDeleteView(LoginRequiredMixin, DeleteView):
     model = BodyweightGoal
     success_url = reverse_lazy('personal-goals')
-    template_name = 'goal_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         goal = self.get_object()
@@ -121,7 +121,7 @@ class DailyNutritionGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, Upda
 class DailyNutritionGoalDeleteView(LoginRequiredMixin, DeleteView):
     model = DailyNutritionGoal
     success_url = reverse_lazy('personal-goals')
-    template_name = 'goal_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         goal = self.get_object()
@@ -181,7 +181,7 @@ class LiftingGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
 class LiftingGoalDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = LiftingGoal
     success_url = reverse_lazy('personal-goals')
-    template_name = 'goal_delete.html'
+    template_name = 'delete.html'
 
     def test_func(self):
         goal = self.get_object()
