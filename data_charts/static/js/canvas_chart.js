@@ -38,12 +38,20 @@ class Chart {
     coordinateGeneration() {
         let maxValue = Math.max(...this.data);
         this.coordinates.length = 0;
-        for (let i = 0; i < this.data.length; i++) {
-            let x = (this.canvas.width - 100) * this.normalizedDates[i] + 80;
-            let y = (this.canvas.height - 50) - (this.data[i] / maxValue) * (this.canvas.height - 90);
-            this.points[i]['x'] = x;
-            this.points[i]['y'] = y;
+        if (this.data.length == 1) {
+            let x = (this.canvas.width - 100) * 0.5 + 80;
+            let y = (this.canvas.height - 50) - 0.7 * (this.canvas.height - 90);
+            this.points[0]['x'] = x;
+            this.points[0]['y'] = y;
             this.coordinates.push([x, y]);
+        } else {
+            for (let i = 0; i < this.data.length; i++) {
+                let x = (this.canvas.width - 100) * this.normalizedDates[i] + 80;
+                let y = (this.canvas.height - 50) - (this.data[i] / maxValue) * (this.canvas.height - 90);
+                this.points[i]['x'] = x;
+                this.points[i]['y'] = y;
+                this.coordinates.push([x, y]);
+            }
         }
         this.coordinates.sort((a, b) => a[0] - b[0]);
     }
