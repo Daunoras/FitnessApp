@@ -2,13 +2,16 @@ import Chart from './canvas_chart.js';
 
 
 function findPoint(mouseX, mouseY, chart) {
-    for (const point of chart.points) {
-        const dx = mouseX - point.x;
-        const dy = mouseY - point.y;
-        const distance = Math.sqrt(dx*dx + dy*dy);
+    console.log(chart.lines);
+    for (let i = 0; i < chart.lines.length; i++) {
+        for (let j = 0; j < chart.lines[i].length; j++) {
+            const dx = mouseX - chart.lines[i][j].x;
+            const dy = mouseY - chart.lines[i][j].y;
+            const distance = Math.sqrt(dx*dx + dy*dy);
 
-        if (distance < 8) {
-            return point;
+            if (distance < 8) {
+                return chart.lines[i][j];
+            }
         }
     }
     return null;

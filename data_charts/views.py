@@ -44,18 +44,17 @@ def get_chart_data(request):
         lift = request.GET.get('lift')
 
         if model_name == 'nutrition':
-            labels, data = get_nutrition_chart_data(request.user, date_from, date_to)
+            data = get_nutrition_chart_data(request.user, date_from, date_to)
         elif model_name == 'weight':
-            labels, data = get_weighting_chart_data(request.user, date_from, date_to)
+            data = get_weighting_chart_data(request.user, date_from, date_to)
         elif model_name == 'exercise':
-            labels, data = get_exercise_chart_data(request.user, lift, date_from, date_to)
+            data = get_exercise_chart_data(request.user, lift, date_from, date_to)
         else:
             return JsonResponse({'error': 'Invalid model'}, status=400)
     else:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 
     return JsonResponse({
-        'labels': labels,
         'data': data,
     })
 
