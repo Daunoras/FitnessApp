@@ -2,7 +2,6 @@ import Chart from './canvas_chart.js';
 
 
 function findPoint(mouseX, mouseY, chart) {
-    console.log(chart.lines);
     for (let i = 0; i < chart.lines.length; i++) {
         for (let j = 0; j < chart.lines[i].length; j++) {
             const dx = mouseX - chart.lines[i][j].x;
@@ -22,13 +21,14 @@ function tooltipText(model, point) {
     let text = '';
     if (model == 'nutrition') {
         text = `${point.date}<br>
-                Calories: ${point.value}`;
+                ${point.info}: ${point.value}`;
     } else if (model == 'weight') {
         text = `${point.date}<br>
-                Bodyweight: ${point.value}`;
+                ${point.info}: ${point.value}`;
     } else if (model == 'exercise') {
         let maxStrength = (((point.value % 1)) < 0.1)? point.value.toFixed(0) : point.value.toFixed(1);
         text = `${point.date}<br>
+                ${point.info}<br>
                Estimated MAX ${maxStrength} kg`;
     }
     return text;

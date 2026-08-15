@@ -1,4 +1,4 @@
-from fitness.models import Set
+from fitness.models import Set, Exercise
 from fitness.services import calculate_lift_max
 from nutrition.models import DayOfEating
 from weighting.models import Weighting
@@ -13,7 +13,8 @@ def get_nutrition_chart_data(user, date_from, date_to):
     dates = [day.date for day in nutrition_data]
     calories = [day.kcal for day in nutrition_data]
     protein = [day.protein for day in nutrition_data]
-    return [[dates, calories], [dates, protein]]
+    return [{'dates': dates, 'data': calories, 'info': 'Calories'},
+            {'dates': dates, 'data': protein, 'info': 'Protein'}]
 
 
 def get_weighting_chart_data(user, date_from, date_to):
@@ -24,7 +25,7 @@ def get_weighting_chart_data(user, date_from, date_to):
         weighting_data = weighting_data.filter(date__lte=date_to)
     dates = [weighting.date for weighting in weighting_data]
     data = [weighting.weight for weighting in weighting_data]
-    return [[dates, data]]
+    return [{'dates': dates, 'data': data, 'info': 'Bodyweight'}]
 
 
 def get_exercise_chart_data(user, lift, date_from, date_to):
@@ -44,4 +45,5 @@ def get_exercise_chart_data(user, lift, date_from, date_to):
     for key in maxes:
         dates.append(key)
         data.append(maxes[key])
-    return [[dates, data]]
+    exercise = Exercise.objects.get(pk=lift)
+    return [{'dates': dates, 'data': data, 'info': exercise.name}]

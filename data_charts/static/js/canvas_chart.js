@@ -23,13 +23,13 @@ class Chart {
 
     setLinePoints(lineData) {
         let linePoints = [];
-        for (let i = 0; i < lineData[0].length; i++) {
+        for (let i = 0; i < lineData.dates.length; i++) {
             let point = {
                 x: undefined,
                 y: undefined,
-                date: lineData[0][i],
-                value: lineData[1][i],
-                info: ''
+                date: lineData.dates[i],
+                value: lineData.data[i],
+                info: lineData.info
             }
             linePoints.push(point);
         }
@@ -44,7 +44,7 @@ class Chart {
         let maxDates = [];
 
         for (let i = 0; i < this.data.length; i++) {
-            let timestamps = this.data[i][0].map(date => new Date(date).getTime());
+            let timestamps = this.data[i].dates.map(date => new Date(date).getTime());
             let minDate = Math.min(...timestamps);
             let maxDate = Math.max(...timestamps);
             allTimestamps.push(timestamps);
@@ -63,7 +63,6 @@ class Chart {
     }
 
     generateCoordinates() {
-        console.log(this.data);
         this.coordinates.length = 0;
         for (let i = 0; i < this.data.length; i++) {
             let coordinates = this.generateLineCoordinates(i);
@@ -72,18 +71,18 @@ class Chart {
     }
 
     generateLineCoordinates(index) {
-        let maxValue = Math.max(...this.data[index][1]);
+        let maxValue = Math.max(...this.data[index].data);
         let lineCoordinates = [];
-        if (this.data[index][1].length == 1 && this.data.length == 1) {
+        if (this.data[index].data.length == 1 && this.data.length == 1) {
             let x = (this.canvas.width - 100) * 0.5 + 80;
             let y = (this.canvas.height - 50) - 0.7 * (this.canvas.height - 90);
             this.points[0]['x'] = x;
             this.points[0]['y'] = y;
             lineCoordinates.push([x, y]);
         } else {
-            for (let i = 0; i < this.data[index][1].length; i++) {
+            for (let i = 0; i < this.data[index].data.length; i++) {
                 let x = (this.canvas.width - 100) * this.normalizedDates[index][i] + 80;
-                let y = (this.canvas.height - 50) - (this.data[index][1][i] / maxValue) * (this.canvas.height - 90);
+                let y = (this.canvas.height - 50) - (this.data[index].data[i] / maxValue) * (this.canvas.height - 90);
                 this.lines[index][i]['x'] = x;
                 this.lines[index][i]['y'] = y;
                 lineCoordinates.push([x, y]);
