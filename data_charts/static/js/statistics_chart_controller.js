@@ -1,6 +1,6 @@
 import Chart from './canvas_chart.js';
 import { fetchChartData, loadChart, validateDates } from './chart_service.js';
-import { findPoint, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
+import { findPoints, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
 
 
 let dataChart = null;
@@ -37,13 +37,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     canvas.addEventListener('mousemove', e => {
         const rect = canvas.getBoundingClientRect();
-        const point = findPoint(
+        const points = findPoints(
             e.clientX - rect.left,
             e.clientY - rect.top,
             dataChart
         );
-        if (point) {
-            showTooltip(modelSelector.value, point, e.pageX, e.pageY);
+        if (points.length > 0) {
+            showTooltip(modelSelector.value, points, e.pageX, e.pageY);
         }
         else {
             hideTooltip();

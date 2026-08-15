@@ -7,69 +7,117 @@ class Chart {
             console.error('error with canvas');
         }
         this.data = data.data;
-        this.labels = data.labels;
         this.model = model;
         this.normalizedDates = [];
         this.coordinates = [];
-        this.points = [];
+        this.lines = [];
         window.addEventListener('resize', () => this.resizeChart());
     }
 
-    setPoints() {
+    setLines() {
         for (let i = 0; i < this.data.length; i++) {
-            let point = {
-                x: undefined,
-                y: undefined,
-                date: this.labels[i],
-                value: this.data[i]
-            }
-            this.points.push(point);
+            let line = this.setLinePoints(this.data[i]);
+            this.lines.push(line);
         }
     }
 
-    dateTransformation() {
-        let timestamps = this.labels.map(label => new Date(label).getTime());
-        let minDate = Math.min(...timestamps);
-        let offsetedDates = timestamps.map(date => date - minDate);
-        let dateEndPoint = Math.max(...offsetedDates);
-        this.normalizedDates = offsetedDates.map(date => date / dateEndPoint);
+    setLinePoints(lineData) {
+        let linePoints = [];
+        for (let i = 0; i < lineData.dates.length; i++) {
+            let point = {
+                x: undefined,
+                y: undefined,
+                date: lineData.dates[i],
+                value: lineData.data[i],
+                info: lineData.info
+            }
+            linePoints.push(point);
+        }
+        return linePoints;
     }
 
-    coordinateGeneration() {
-        let maxValue = Math.max(...this.data);
+    transformDates() {
+        this.normalizedDates.length = 0;
+
+        let allTimestamps = [];
+        let minDates = [];
+        let maxDates = [];
+
+        for (let i = 0; i < this.data.length; i++) {
+            let timestamps = this.data[i].dates.map(date => new Date(date).getTime());
+            let minDate = Math.min(...timestamps);
+            let maxDate = Math.max(...timestamps);
+            allTimestamps.push(timestamps);
+            minDates.push(minDate);
+            maxDates.push(maxDate);
+        }
+
+        let startingDate = Math.min(...minDates);
+        let dateEndPoint = Math.max(...maxDates) - startingDate;
+
+        for (let i = 0; i < allTimestamps.length; i++) {
+            let offsetedDates = allTimestamps[i].map(date => date - startingDate);
+            let normalized = offsetedDates.map(date => date / dateEndPoint);
+            this.normalizedDates.push(normalized);
+        }
+    }
+
+    generateCoordinates() {
         this.coordinates.length = 0;
-        if (this.data.length == 1) {
+        for (let i = 0; i < this.data.length; i++) {
+            let coordinates = this.generateLineCoordinates(i);
+            this.coordinates.push(coordinates);
+        }
+    }
+
+    generateLineCoordinates(index) {
+        let maxValue = Math.max(...this.data[index].data);
+        let lineCoordinates = [];
+        if (this.data[index].data.length == 1 && this.data.length == 1) {
             let x = (this.canvas.width - 100) * 0.5 + 80;
             let y = (this.canvas.height - 50) - 0.7 * (this.canvas.height - 90);
             this.points[0]['x'] = x;
             this.points[0]['y'] = y;
-            this.coordinates.push([x, y]);
+            lineCoordinates.push([x, y]);
         } else {
-            for (let i = 0; i < this.data.length; i++) {
-                let x = (this.canvas.width - 100) * this.normalizedDates[i] + 80;
-                let y = (this.canvas.height - 50) - (this.data[i] / maxValue) * (this.canvas.height - 90);
-                this.points[i]['x'] = x;
-                this.points[i]['y'] = y;
-                this.coordinates.push([x, y]);
+            for (let i = 0; i < this.data[index].data.length; i++) {
+                let x = (this.canvas.width - 100) * this.normalizedDates[index][i] + 80;
+                let y = (this.canvas.height - 50) - (this.data[index].data[i] / maxValue) * (this.canvas.height - 90);
+                this.lines[index][i]['x'] = x;
+                this.lines[index][i]['y'] = y;
+                lineCoordinates.push([x, y]);
             }
         }
-        this.coordinates.sort((a, b) => a[0] - b[0]);
+        lineCoordinates.sort((a, b) => a[0] - b[0]);
+        return lineCoordinates;
+    }
+
+    getLineColor(index) {
+         const hue = (index * 137.508) % 360;
+         return `oklch(65% 0.15 ${hue})`;
     }
 
     drawLineChart() {
         if (!this.ctx || this.coordinates.length == 0) return;
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
-
-        for (let i = 1; i < this.coordinates.length; i++){
-            this.ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
+        for (let i = 0; i < this.coordinates.length; i++) {
+            this.drawLine(this.coordinates[i], this.getLineColor(i));
         }
-        this.ctx.strokeStyle = 'red';
+    }
+
+    drawLine(coordinates, lineColor) {
+        if (coordinates.length == 0) return;
+        this.ctx.beginPath();
+        this.ctx.moveTo(coordinates[0][0], coordinates[0][1]);
+
+        for (let i = 1; i < coordinates.length; i++){
+            this.ctx.lineTo(coordinates[i][0], coordinates[i][1]);
+        }
+        this.ctx.strokeStyle = lineColor;
         this.ctx.stroke();
 
-        for (let i = 0; i < this.coordinates.length; i++) {
+        for (let i = 0; i < coordinates.length; i++) {
             this.ctx.beginPath();
-            this.ctx.arc(this.coordinates[i][0], this.coordinates[i][1], 3, 0, 2 * Math.PI);
+            this.ctx.arc(coordinates[i][0], coordinates[i][1], 3, 0, 2 * Math.PI);
             this.ctx.fill();
         }
 
@@ -98,12 +146,11 @@ class Chart {
 
     updateData(newData, model) {
         this.data = newData.data;
-        this.labels = newData.labels;
         this.model = model;
-        this.points = [];
-        this.setPoints();
-        this.dateTransformation();
-        this.coordinateGeneration();
+        this.lines = [];
+        this.setLines();
+        this.transformDates();
+        this.generateCoordinates();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawAxis();
         this.drawLineChart();
@@ -118,16 +165,16 @@ class Chart {
     resizeChart() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.resizeCanvas();
-        this.coordinateGeneration();
+        this.generateCoordinates();
         this.drawAxis();
         this.drawLineChart();
     }
 
     initialDraw() {
-        this.setPoints();
+        this.setLines();
         this.resizeCanvas();
-        this.dateTransformation();
-        this.coordinateGeneration();
+        this.transformDates();
+        this.generateCoordinates();
         this.drawAxis();
         this.drawLineChart();
     }

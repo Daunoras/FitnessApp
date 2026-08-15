@@ -1,4 +1,4 @@
-from fitness.models import Set
+from fitness.models import Set, Exercise
 from fitness.services import calculate_lift_max
 from nutrition.models import DayOfEating
 from weighting.models import Weighting
@@ -10,9 +10,11 @@ def get_nutrition_chart_data(user, date_from, date_to):
         nutrition_data = nutrition_data.filter(date__gte=date_from)
     if date_to:
         nutrition_data = nutrition_data.filter(date__lte=date_to)
-    labels = [day.date for day in nutrition_data]
-    data = [day.kcal for day in nutrition_data]
-    return labels, data
+    dates = [day.date for day in nutrition_data]
+    calories = [day.kcal for day in nutrition_data]
+    protein = [day.protein for day in nutrition_data]
+    return [{'dates': dates, 'data': calories, 'info': 'Calories'},
+            {'dates': dates, 'data': protein, 'info': 'Protein'}]
 
 
 def get_weighting_chart_data(user, date_from, date_to):
@@ -21,9 +23,9 @@ def get_weighting_chart_data(user, date_from, date_to):
         weighting_data = weighting_data.filter(date__gte=date_from)
     if date_to:
         weighting_data = weighting_data.filter(date__lte=date_to)
-    labels = [weighting.date for weighting in weighting_data]
+    dates = [weighting.date for weighting in weighting_data]
     data = [weighting.weight for weighting in weighting_data]
-    return labels, data
+    return [{'dates': dates, 'data': data, 'info': 'Bodyweight'}]
 
 
 def get_exercise_chart_data(user, lift, date_from, date_to):
@@ -38,9 +40,10 @@ def get_exercise_chart_data(user, lift, date_from, date_to):
         max_ = calculate_lift_max(set_.weight, set_.reps, set_.exercise, date)
         if (date in maxes and max_ > maxes[date]) or date not in maxes:
             maxes[date] = max_
-    labels = []
+    dates = []
     data = []
     for key in maxes:
-        labels.append(key)
+        dates.append(key)
         data.append(maxes[key])
-    return labels, data
+    exercise = Exercise.objects.get(pk=lift)
+    return [{'dates': dates, 'data': data, 'info': exercise.name}]

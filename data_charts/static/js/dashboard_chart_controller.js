@@ -1,6 +1,6 @@
 import Chart from './canvas_chart.js';
 import { fetchChartData, loadChart, validateDates } from './chart_service.js';
-import { findPoint, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
+import { findPoints, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
 
 
 let nutritionChart = null;
@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     nutritionCanvas.addEventListener('mousemove', e => {
         const rect = nutritionCanvas.getBoundingClientRect();
-        const point = findPoint(
+        const points = findPoints(
             e.clientX - rect.left,
             e.clientY - rect.top,
             nutritionChart
         );
-        if (point) {
-            showTooltip('nutrition', point, e.pageX, e.pageY);
+        if (points.length > 0) {
+            showTooltip('nutrition', points, e.pageX, e.pageY);
         }
         else {
             hideTooltip();
@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     weightCanvas.addEventListener('mousemove', e => {
         const rect = weightCanvas.getBoundingClientRect();
-        const point = findPoint(
+        const points = findPoints(
             e.clientX - rect.left,
             e.clientY - rect.top,
             weightChart
         );
-        if (point) {
-            showTooltip('weight', point, e.pageX, e.pageY);
+        if (points.length > 0) {
+            showTooltip('weight', points, e.pageX, e.pageY);
         }
         else {
             hideTooltip();
