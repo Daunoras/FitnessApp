@@ -1,5 +1,5 @@
 import ActivityCalendar from "./activity_calendar.js";
-import { findPoint, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
+import { findPoints, tooltipText, showTooltip, hideTooltip } from './tooltip.js';
 import { fetchCalendarData, updatePopover } from './calendar_service.js';
 
 
