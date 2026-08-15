@@ -93,11 +93,15 @@ class Chart {
         return lineCoordinates;
     }
 
+    getLineColor(index) {
+         const hue = (index * 137.508) % 360;
+         return `oklch(65% 0.15 ${hue})`;
+    }
+
     drawLineChart() {
         if (!this.ctx || this.coordinates.length == 0) return;
-        let colors = ['red', 'blue', 'green'];
         for (let i = 0; i < this.coordinates.length; i++) {
-            this.drawLine(this.coordinates[i], colors[i]);
+            this.drawLine(this.coordinates[i], this.getLineColor(i));
         }
     }
 
