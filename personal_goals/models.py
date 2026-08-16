@@ -100,6 +100,19 @@ class BodyweightGoal(Goal):
             description += f" to {self.deadline}"
         return description
 
+    def activate(self):
+        if not self.start_bodyweight or self.start_bodyweight <= 0:
+            raise ValidationError("Provide a valid starting bodyweight")
+        if not self.target_bodyweight or self.target_bodyweight <= 0:
+            raise ValidationError("Provide a valid target bodyweight")
+
+        weighting = Weighting.objects.filter(date=self.start_date).order_by("-date").first()
+        if not weighting or weighting.weight != self.start_bodyweight:
+            Weighting.objects.create(athlete=self.user, weight=self.start_bodyweight, date=self.start_date)
+
+        self.status = GoalStatus.ACTIVE
+        self.save()
+
 
 class DailyNutritionGoal(Goal):
     amount = models.FloatField("Consumed amount", blank=False, null=False)

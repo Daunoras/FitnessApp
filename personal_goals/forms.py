@@ -9,7 +9,6 @@ class BodyweightGoalCreateForm(forms.ModelForm):
         fields = [
               'start_date',
               'deadline',
-              'status',
               'target_bodyweight',
               'start_bodyweight'
         ]

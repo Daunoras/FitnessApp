@@ -23,6 +23,12 @@
           <a href="{% url 'bodyweight-goal-delete' object.id %}">
               <button id="destroy">Delete</button>
           </a>
+          {% if object.status == "Inactive" %}
+            <form method="post" action="{% url 'bodyweight-goal-activate' object.pk %}">
+                {% csrf_token %}
+                <button type="submit">Activate</button>
+            </form>
+          {% endif %}
         </div>
     </ul>
     <a href="{% url 'personal-goals' %}">

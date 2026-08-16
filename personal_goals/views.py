@@ -1,6 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm, LiftingGoalCreateForm
@@ -234,3 +236,11 @@ class LiftingGoalDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
         context["page_title"] = "Do you really want to delete your lifting goal?"
         context["cancel_url"] = reverse_lazy('lifting-goal-details', args=[self.object.pk])
         return context
+
+
+@login_required
+@require_POST
+def activate_bodyweight_goal(request, pk):
+    bodyweight_goal = get_object_or_404(BodyweightGoal, pk=pk)
+    bodyweight_goal.activate()
+    return redirect("bodyweight-goal-details", pk=bodyweight_goal.pk)
