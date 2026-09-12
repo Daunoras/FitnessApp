@@ -37,7 +37,7 @@ def get_exercise_chart_data(user, lift, date_from, date_to):
     maxes = {}
     for set_ in exercise_data:
         date = set_.workout.date
-        max_ = calculate_lift_max(set_.weight, set_.reps, set_.exercise, date)
+        max_ = calculate_lift_max(set_.weight, set_.reps, set_.exercise, date, user)
         if (date in maxes and max_ > maxes[date]) or date not in maxes:
             maxes[date] = max_
     dates = []

@@ -1,13 +1,14 @@
 from .models import Weighting
 
 
-def calculate_bodyweight(date):
-    exact = Weighting.objects.filter(date=date).first()
+def calculate_bodyweight(user, date):
+    records = Weighting.objects.filter(athlete=user)
+    exact = records.filter(date=date).first()
     if exact:
         return exact.weight
 
-    previous_record = Weighting.objects.filter(date__lt=date).order_by("-date").first()
-    later_record = Weighting.objects.filter(date__gt=date).order_by("date").first()
+    previous_record = records.filter(date__lt=date).order_by("-date").first()
+    later_record = records.filter(date__gt=date).order_by("date").first()
 
     if previous_record and later_record:
         total_days = (later_record.date - previous_record.date).days
