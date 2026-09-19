@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from weighting.services import calculate_bodyweight
 
 
@@ -9,3 +11,8 @@ def calculate_lift_max(weight, reps, exercise, date, user):
     else:
         estimated_max = (int(weight) * (1 + reps / 30))
     return estimated_max
+
+
+class ExerciseCreatedByMixin(LoginRequiredMixin):
+    def get_queryset(self):
+        return super().get_queryset().filter(created_by=self.request.user)

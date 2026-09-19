@@ -4,6 +4,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from .forms import DayOfEatingCreateForm
 from .models import DayOfEating
+from core.services import AthleteOwnedMixin
 
 
 class DaysOfEatingListView(LoginRequiredMixin, ListView):
@@ -14,7 +15,7 @@ class DaysOfEatingListView(LoginRequiredMixin, ListView):
         return DayOfEating.objects.filter(athlete=self.request.user).order_by('-date')
 
 
-class DayOfEatingDetailView(LoginRequiredMixin, DetailView):
+class DayOfEatingDetailView(AthleteOwnedMixin, DetailView):
     model = DayOfEating
     template_name = 'day_of_eating_details.html'
 
@@ -68,7 +69,7 @@ class DayOfEatingCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class DayOfEatingUpdateView(AthleteOwnedMixin, UserPassesTestMixin, UpdateView):
     model = DayOfEating
     fields = ['kcal', 'protein']
     template_name = 'add_record.html'
@@ -93,7 +94,7 @@ class DayOfEatingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
         return context
 
 
-class DayOfEatingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DayOfEatingDeleteView(AthleteOwnedMixin, UserPassesTestMixin, DeleteView):
     model = DayOfEating
     success_url = reverse_lazy('nutrition')
     template_name = 'delete.html'

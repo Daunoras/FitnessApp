@@ -2,11 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.edit import FormMixin
 
 from .forms import ExerciseCreateForm, SetCreateForm, WorkoutCreateForm
 from .models import Exercise, Set, Workout
+from .services import ExerciseCreatedByMixin
+from core.services import AthleteOwnedMixin
 
 
 class WorkoutListView(LoginRequiredMixin, ListView):
@@ -17,7 +20,7 @@ class WorkoutListView(LoginRequiredMixin, ListView):
         return Workout.objects.filter(athlete=self.request.user).order_by('-date')
 
 
-class WorkoutDetailView(LoginRequiredMixin, DetailView, FormMixin):
+class WorkoutDetailView(AthleteOwnedMixin, DetailView, FormMixin):
     model = Workout
     template_name = 'workout_details.html'
     form_class = SetCreateForm
@@ -88,7 +91,7 @@ class WorkoutCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class WorkoutUpdateView(AthleteOwnedMixin, UserPassesTestMixin, UpdateView):
     model = Workout
     fields = ['date', 'duration', 'type']
     template_name = 'add_record.html'
@@ -113,7 +116,7 @@ class WorkoutUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
 
-class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class WorkoutDeleteView(AthleteOwnedMixin, UserPassesTestMixin, DeleteView):
     model = Workout
     success_url = reverse_lazy('workouts')
     template_name = 'delete.html'
@@ -130,7 +133,7 @@ class WorkoutDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return context
 
 
-class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class SetDeleteView(AthleteOwnedMixin, UserPassesTestMixin, DeleteView):
     model = Set
 
     def post(self, request, *args, **kwargs):
@@ -145,6 +148,7 @@ class SetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 @login_required
+@require_POST
 def duplicate_set(request, pk):
     original_set = get_object_or_404(Set, id=pk)
     new_set = Set.objects.create(
@@ -152,6 +156,7 @@ def duplicate_set(request, pk):
         workout=original_set.workout,
         weight=original_set.weight,
         reps=original_set.reps,
+        athlete=original_set.athlete,
     )
     return redirect('workout-details', pk=original_set.workout.pk)
 
@@ -183,7 +188,7 @@ class ExerciseListView(LoginRequiredMixin, ListView):
         return Exercise.objects.filter(created_by=self.request.user)
 
 
-class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ExerciseUpdateView(ExerciseCreatedByMixin, UserPassesTestMixin, UpdateView):
     model = Exercise
     fields = ['name',
               'description',
@@ -212,7 +217,7 @@ class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
 
-class ExerciseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ExerciseDeleteView(ExerciseCreatedByMixin, UserPassesTestMixin, DeleteView):
     model = Exercise
     success_url = reverse_lazy('exercises')
     template_name = 'delete.html'

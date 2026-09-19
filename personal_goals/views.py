@@ -7,7 +7,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from .forms import BodyweightGoalCreateForm, DailyNutritionGoalCreateForm, LiftingGoalCreateForm
 from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
-from .services import get_user_current_goals, get_user_goals
+from .services import get_user_current_goals, get_user_goals, UserOwnedMixin
 
 
 def personal_goals_view(request):
@@ -39,12 +39,12 @@ class BodyweightGoalCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class BodyweightGoalDetailView(LoginRequiredMixin, DetailView):
+class BodyweightGoalDetailView(UserOwnedMixin, DetailView):
     model = BodyweightGoal
     template_name = 'bodyweight_goal_details.html'
 
 
-class BodyweightGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class BodyweightGoalUpdateView(UserOwnedMixin, UserPassesTestMixin, UpdateView):
     model = BodyweightGoal
     fields = [
         'start_date',
@@ -76,7 +76,7 @@ class BodyweightGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateVi
         return context
 
 
-class BodyweightGoalDeleteView(LoginRequiredMixin, DeleteView):
+class BodyweightGoalDeleteView(UserOwnedMixin, DeleteView):
     model = BodyweightGoal
     success_url = reverse_lazy('personal-goals')
     template_name = 'delete.html'
@@ -111,12 +111,12 @@ class DailyNutritionGoalCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class DailyNutritionGoalDetailView(LoginRequiredMixin, DetailView):
+class DailyNutritionGoalDetailView(UserOwnedMixin, DetailView):
     model = DailyNutritionGoal
     template_name = 'nutrition_goal_details.html'
 
 
-class DailyNutritionGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class DailyNutritionGoalUpdateView(UserOwnedMixin, UserPassesTestMixin, UpdateView):
     model = DailyNutritionGoal
     fields = [
         'start_date',
@@ -148,7 +148,7 @@ class DailyNutritionGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, Upda
         return context
 
 
-class DailyNutritionGoalDeleteView(LoginRequiredMixin, DeleteView):
+class DailyNutritionGoalDeleteView(UserOwnedMixin, DeleteView):
     model = DailyNutritionGoal
     success_url = reverse_lazy('personal-goals')
     template_name = 'delete.html'
@@ -183,12 +183,12 @@ class LiftingGoalCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class LiftingGoalDetailView(LoginRequiredMixin, DetailView):
+class LiftingGoalDetailView(UserOwnedMixin, DetailView):
     model = LiftingGoal
     template_name = 'lifting_goal_details.html'
 
 
-class LiftingGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class LiftingGoalUpdateView(UserOwnedMixin, UserPassesTestMixin, UpdateView):
     model = LiftingGoal
     fields = [
             'start_date',
@@ -222,7 +222,7 @@ class LiftingGoalUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
         return context
 
 
-class LiftingGoalDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class LiftingGoalDeleteView(UserOwnedMixin, UserPassesTestMixin, DeleteView):
     model = LiftingGoal
     success_url = reverse_lazy('personal-goals')
     template_name = 'delete.html'
@@ -241,6 +241,6 @@ class LiftingGoalDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
 @login_required
 @require_POST
 def activate_bodyweight_goal(request, pk):
-    bodyweight_goal = get_object_or_404(BodyweightGoal, pk=pk)
+    bodyweight_goal = get_object_or_404(BodyweightGoal, pk=pk, user=request.user)
     bodyweight_goal.activate()
     return redirect("bodyweight-goal-details", pk=bodyweight_goal.pk)
