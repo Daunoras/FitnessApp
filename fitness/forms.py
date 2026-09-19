@@ -17,7 +17,8 @@ class SetCreateForm(forms.ModelForm):
         model = Set
         fields = ['exercise', 'weight', 'reps']
         widgets = {
-            'workout': forms.HiddenInput()
+            'workout': forms.HiddenInput(),
+            'athlete': forms.HiddenInput()
         }
 
 

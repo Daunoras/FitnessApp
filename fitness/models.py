@@ -62,6 +62,7 @@ class Set(models.Model):
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
     weight = models.CharField('Weight', max_length=15)
     reps = models.IntegerField('Reps')
+    athlete = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         if self.weight == "0":
