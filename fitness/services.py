@@ -13,11 +13,6 @@ def calculate_lift_max(weight, reps, exercise, date, user):
     return estimated_max
 
 
-class AthleteOwnedMixin(LoginRequiredMixin):
-    def get_queryset(self):
-        return super().get_queryset().filter(athlete=self.request.user)
-
-
 class ExerciseCreatedByMixin(LoginRequiredMixin):
     def get_queryset(self):
         return super().get_queryset().filter(created_by=self.request.user)

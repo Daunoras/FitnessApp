@@ -8,7 +8,8 @@ from django.views.generic.edit import FormMixin
 
 from .forms import ExerciseCreateForm, SetCreateForm, WorkoutCreateForm
 from .models import Exercise, Set, Workout
-from .services import AthleteOwnedMixin, ExerciseCreatedByMixin
+from .services import ExerciseCreatedByMixin
+from core.services import AthleteOwnedMixin
 
 
 class WorkoutListView(LoginRequiredMixin, ListView):

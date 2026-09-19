@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from .forms import WeightingCreateForm
 from .models import Weighting
+from core.services import AthleteOwnedMixin
 
 
 class WeightingListView(LoginRequiredMixin, ListView):
@@ -39,7 +40,7 @@ class WeightingCreateView(LoginRequiredMixin, CreateView):
         return initial
 
 
-class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class WeightingUpdateView(AthleteOwnedMixin, UserPassesTestMixin, UpdateView):
     model = Weighting
     fields = ['weight', 'date']
     template_name = 'add_record.html'
@@ -62,7 +63,7 @@ class WeightingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
 
-class WeightingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class WeightingDeleteView(AthleteOwnedMixin, UserPassesTestMixin, DeleteView):
     model = Weighting
     success_url = reverse_lazy('weighting')
     template_name = 'delete.html'
