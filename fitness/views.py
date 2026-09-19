@@ -8,7 +8,7 @@ from django.views.generic.edit import FormMixin
 
 from .forms import ExerciseCreateForm, SetCreateForm, WorkoutCreateForm
 from .models import Exercise, Set, Workout
-from .services import AthleteOwnedMixin
+from .services import AthleteOwnedMixin, ExerciseCreatedByMixin
 
 
 class WorkoutListView(LoginRequiredMixin, ListView):
@@ -187,7 +187,7 @@ class ExerciseListView(LoginRequiredMixin, ListView):
         return Exercise.objects.filter(created_by=self.request.user)
 
 
-class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ExerciseUpdateView(ExerciseCreatedByMixin, UserPassesTestMixin, UpdateView):
     model = Exercise
     fields = ['name',
               'description',
@@ -216,7 +216,7 @@ class ExerciseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
 
-class ExerciseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ExerciseDeleteView(ExerciseCreatedByMixin, UserPassesTestMixin, DeleteView):
     model = Exercise
     success_url = reverse_lazy('exercises')
     template_name = 'delete.html'
