@@ -10,6 +10,7 @@ from .models import BodyweightGoal, DailyNutritionGoal, LiftingGoal
 from .services import get_user_current_goals, get_user_goals, UserOwnedMixin
 
 
+@login_required
 def personal_goals_view(request):
     current_goals = get_user_current_goals(request.user)
     all_goals = get_user_goals(request.user)

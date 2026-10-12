@@ -71,7 +71,15 @@ class BodyweightGoal(Goal):
     detail_url_name = "bodyweight-goal-details"
 
     def check_completeness(self):
-        current_weight = Weighting.objects.filter(athlete=self.user).order_by("-date").first().weight
+        """
+        Checks if the goal is completed
+        :return: True if completed, False otherwise
+        """
+        rec = Weighting.objects.filter(athlete=self.user).order_by("-date").first()
+        if not (rec and rec.weight):
+            return False
+
+        current_weight = rec.weight
         if ((not self.is_weight_loss and current_weight >= self.target_bodyweight)
              or (self.is_weight_loss and current_weight <= self.target_bodyweight)):
             return True
@@ -79,19 +87,28 @@ class BodyweightGoal(Goal):
             return False
 
     def progress_percentage(self):
-        current_weight = Weighting.objects.filter(athlete=self.user).order_by("-date").first().weight
+        """
+        Calculates the progress percentage of the bodyweight goal
+        :returns progress percentage as a fraction, where 1 represents 100%
+        """
+        rec = Weighting.objects.filter(athlete=self.user).order_by("-date").first()
+        if not (rec and rec.weight) or self.target_bodyweight == self.start_bodyweight:
+            return 0
+
+        current_weight = rec.weight
         if self.is_weight_loss:
-            progress = self.start_bodyweight - current_weight / self.start_bodyweight - self.target_bodyweight
+            return (self.start_bodyweight - current_weight) / (self.start_bodyweight - self.target_bodyweight)
         else:
-            progress = current_weight - self.start_bodyweight / self.target_bodyweight - self.start_bodyweight
-        return progress
+            return (current_weight - self.start_bodyweight) / (self.target_bodyweight - self.start_bodyweight)
+
+    def _recalculate_if_weight_loss(self):
+        if self.start_bodyweight > self.target_bodyweight:
+            self.is_weight_loss = True
+        else:
+            self.is_weight_loss = False
 
     def save(self, *args, **kwargs):
-        if not self.is_weight_loss:
-            if self.start_bodyweight > self.target_bodyweight:
-                self.is_weight_loss = True
-            else:
-                self.is_weight_loss = False
+        self._recalculate_if_weight_loss()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -106,7 +123,7 @@ class BodyweightGoal(Goal):
         if not self.target_bodyweight or self.target_bodyweight <= 0:
             raise ValidationError("Provide a valid target bodyweight")
 
-        weighting = Weighting.objects.filter(date=self.start_date).order_by("-date").first()
+        weighting = Weighting.objects.filter(date=self.start_date, athlete=self.user).order_by("-date").first()
         if not weighting or weighting.weight != self.start_bodyweight:
             Weighting.objects.create(athlete=self.user, weight=self.start_bodyweight, date=self.start_date)
 
@@ -130,10 +147,10 @@ class DailyNutritionGoal(Goal):
             athlete=self.user, date=datetime.date.today()
         ).order_by("-date").first()
         progress = 0
-        if todays_eating:
-            if self.nutrient_type == NutrientType.CALORIES:
+        if todays_eating and self.amount and self.amount > 0:
+            if self.nutrient_type == NutrientType.CALORIES and todays_eating.kcal:
                 progress = todays_eating.kcal / self.amount
-            elif self.nutrient_type == NutrientType.PROTEIN:
+            elif self.nutrient_type == NutrientType.PROTEIN and todays_eating.protein:
                 progress = todays_eating.protein / self.amount
         return progress
 
